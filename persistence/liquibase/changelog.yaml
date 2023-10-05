@@ -1,0 +1,73 @@
+databaseChangeLog:
+    - changeSet:
+          id: 1
+          author: YourName
+          changes:
+              - createTable:
+                    tableName: USERS
+                    columns:
+                        - column:
+                              name: UID
+                              type: INT
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                        - column:
+                              name: name
+                              type: VARCHAR(255)
+                        - column:
+                              name: username
+                              type: VARCHAR(255)
+                        - column:
+                              name: password
+                              type: VARCHAR(255)
+                        - column:
+                              name: parkin_pass_type
+                              type: VARCHAR(255)
+                        - column:
+                              name: address
+                              type: VARCHAR(255)
+                        - column:
+                              name: bio
+                              type: TEXT
+                        - column:
+                              name: createdAt
+                              type: TIMESTAMP
+                              constraints:
+                                  defaultValue: CURRENT_TIMESTAMP
+
+    - changeSet:
+          id: 2
+          author: YourName
+          changes:
+              - createTable:
+                    tableName: SESSIONS
+                    columns:
+                        - column:
+                              name: createdAt
+                              type: TIMESTAMP
+                              constraints:
+                                  defaultValue: CURRENT_TIMESTAMP
+                        - column:
+                              name: USER
+                              type: INT
+                        - column:
+                              name: rec_garage
+                              type: VARCHAR(255)
+                        - column:
+                              name: rec_avail
+                              type: BOOLEAN
+                        - column:
+                              name: rec_travel_time
+                              type: INT
+
+    - changeSet:
+          id: 3
+          author: YourName
+          changes:
+              - addForeignKeyConstraint:
+                    baseTableName: SESSIONS
+                    baseColumnNames: USER
+                    referencedTableName: USERS
+                    referencedColumnNames: UID
+                    constraintName: fk_USER
