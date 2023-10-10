@@ -13,6 +13,11 @@ databaseChangeLog:
                               constraints:
                                   primaryKey: true
                         - column:
+                              name: createdAt
+                              type: TIMESTAMP
+                              constraints:
+                                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                        - column:
                               name: name
                               type: VARCHAR(255)
                         - column:
@@ -22,7 +27,7 @@ databaseChangeLog:
                               name: password
                               type: VARCHAR(255)
                         - column:
-                              name: parkin_pass_type
+                              name: parking_pass_type
                               type: VARCHAR(255)
                         - column:
                               name: address
@@ -30,11 +35,6 @@ databaseChangeLog:
                         - column:
                               name: bio
                               type: TEXT
-                        - column:
-                              name: createdAt
-                              type: TIMESTAMP
-                              constraints:
-                                  defaultValue: CURRENT_TIMESTAMP
 
     - changeSet:
           id: 2
@@ -47,7 +47,7 @@ databaseChangeLog:
                               name: createdAt
                               type: TIMESTAMP
                               constraints:
-                                  defaultValue: CURRENT_TIMESTAMP
+                                  defaultValueComputed: "CURRENT_TIMESTAMP"
                         - column:
                               name: USER
                               type: INT
@@ -55,10 +55,22 @@ databaseChangeLog:
                               name: rec_garage
                               type: VARCHAR(255)
                         - column:
-                              name: rec_avail
-                              type: BOOLEAN
+                              name: rec_avail_1
+                              type: INT
                         - column:
-                              name: rec_travel_time
+                              name: rec_travel_time_1
+                              type: INT
+                        - column:
+                              name: rec_avail_2
+                              type: INT
+                        - column:
+                              name: rec_travel_time_2
+                              type: INT
+                        - column:
+                              name: rec_avail_3
+                              type: INT
+                        - column:
+                              name: rec_travel_time_3
                               type: INT
 
     - changeSet:
