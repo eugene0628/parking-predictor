@@ -35,8 +35,8 @@ model DATABASECHANGELOGLOCK {
   LOCKEDBY    String?   @db.VarChar(255)
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model SESSIONS {
+  UID               Int       @id @default(autoincrement())
   createdAt         DateTime? @db.Timestamp(0)
   USER              Int?
   rec_garage        String?   @db.VarChar(255)
@@ -49,17 +49,16 @@ model SESSIONS {
   USERS             USERS?    @relation(fields: [USER], references: [UID], onDelete: NoAction, onUpdate: NoAction, map: "fk_USER")
 
   @@index([USER], map: "fk_USER")
-  @@ignore
 }
 
 model USERS {
   UID               Int        @id @default(autoincrement())
+  createdAt         DateTime?  @db.Timestamp(0)
   name              String?    @db.VarChar(255)
   username          String?    @db.VarChar(255)
   password          String?    @db.VarChar(255)
   parking_pass_type String?    @db.VarChar(255)
   address           String?    @db.VarChar(255)
   bio               String?    @db.Text
-  createdAt         DateTime   @default(now())
-  SESSIONS          SESSIONS[] @ignore
+  SESSIONS          SESSIONS[]
 }

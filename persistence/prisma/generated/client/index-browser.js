@@ -114,15 +114,28 @@ exports.Prisma.DATABASECHANGELOGLOCKScalarFieldEnum = {
   LOCKEDBY: 'LOCKEDBY'
 };
 
+exports.Prisma.SESSIONSScalarFieldEnum = {
+  UID: 'UID',
+  createdAt: 'createdAt',
+  USER: 'USER',
+  rec_garage: 'rec_garage',
+  rec_avail_1: 'rec_avail_1',
+  rec_travel_time_1: 'rec_travel_time_1',
+  rec_avail_2: 'rec_avail_2',
+  rec_travel_time_2: 'rec_travel_time_2',
+  rec_avail_3: 'rec_avail_3',
+  rec_travel_time_3: 'rec_travel_time_3'
+};
+
 exports.Prisma.USERSScalarFieldEnum = {
   UID: 'UID',
+  createdAt: 'createdAt',
   name: 'name',
   username: 'username',
   password: 'password',
   parking_pass_type: 'parking_pass_type',
   address: 'address',
-  bio: 'bio',
-  createdAt: 'createdAt'
+  bio: 'bio'
 };
 
 exports.Prisma.SortOrder = {
@@ -138,6 +151,7 @@ exports.Prisma.NullsOrder = {
 
 exports.Prisma.ModelName = {
   DATABASECHANGELOGLOCK: 'DATABASECHANGELOGLOCK',
+  SESSIONS: 'SESSIONS',
   USERS: 'USERS'
 };
 

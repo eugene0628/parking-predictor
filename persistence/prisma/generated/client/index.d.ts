@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type DATABASECHANGELOGLOCK = $Result.DefaultSelection<Prisma.$DATABASECHANGELOGLOCKPayload>
 /**
+ * Model SESSIONS
+ * 
+ */
+export type SESSIONS = $Result.DefaultSelection<Prisma.$SESSIONSPayload>
+/**
  * Model USERS
  * 
  */
@@ -155,6 +160,16 @@ export class PrismaClient<
     * ```
     */
   get dATABASECHANGELOGLOCK(): Prisma.DATABASECHANGELOGLOCKDelegate<ExtArgs>;
+
+  /**
+   * `prisma.sESSIONS`: Exposes CRUD operations for the **SESSIONS** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SESSIONS
+    * const sESSIONS = await prisma.sESSIONS.findMany()
+    * ```
+    */
+  get sESSIONS(): Prisma.SESSIONSDelegate<ExtArgs>;
 
   /**
    * `prisma.uSERS`: Exposes CRUD operations for the **USERS** model.
@@ -636,6 +651,7 @@ export namespace Prisma {
 
   export const ModelName: {
     DATABASECHANGELOGLOCK: 'DATABASECHANGELOGLOCK',
+    SESSIONS: 'SESSIONS',
     USERS: 'USERS'
   };
 
@@ -653,7 +669,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meta: {
-      modelProps: 'dATABASECHANGELOGLOCK' | 'uSERS'
+      modelProps: 'dATABASECHANGELOGLOCK' | 'sESSIONS' | 'uSERS'
       txIsolationLevel: Prisma.TransactionIsolationLevel
     },
     model: {
@@ -720,6 +736,72 @@ export namespace Prisma {
           count: {
             args: Prisma.DATABASECHANGELOGLOCKCountArgs<ExtArgs>,
             result: $Utils.Optional<DATABASECHANGELOGLOCKCountAggregateOutputType> | number
+          }
+        }
+      }
+      SESSIONS: {
+        payload: Prisma.$SESSIONSPayload<ExtArgs>
+        fields: Prisma.SESSIONSFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SESSIONSFindUniqueArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$SESSIONSPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SESSIONSFindUniqueOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$SESSIONSPayload>
+          }
+          findFirst: {
+            args: Prisma.SESSIONSFindFirstArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$SESSIONSPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SESSIONSFindFirstOrThrowArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$SESSIONSPayload>
+          }
+          findMany: {
+            args: Prisma.SESSIONSFindManyArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$SESSIONSPayload>[]
+          }
+          create: {
+            args: Prisma.SESSIONSCreateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$SESSIONSPayload>
+          }
+          createMany: {
+            args: Prisma.SESSIONSCreateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          delete: {
+            args: Prisma.SESSIONSDeleteArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$SESSIONSPayload>
+          }
+          update: {
+            args: Prisma.SESSIONSUpdateArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$SESSIONSPayload>
+          }
+          deleteMany: {
+            args: Prisma.SESSIONSDeleteManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SESSIONSUpdateManyArgs<ExtArgs>,
+            result: Prisma.BatchPayload
+          }
+          upsert: {
+            args: Prisma.SESSIONSUpsertArgs<ExtArgs>,
+            result: $Utils.PayloadToResult<Prisma.$SESSIONSPayload>
+          }
+          aggregate: {
+            args: Prisma.SESSIONSAggregateArgs<ExtArgs>,
+            result: $Utils.Optional<AggregateSESSIONS>
+          }
+          groupBy: {
+            args: Prisma.SESSIONSGroupByArgs<ExtArgs>,
+            result: $Utils.Optional<SESSIONSGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SESSIONSCountArgs<ExtArgs>,
+            result: $Utils.Optional<SESSIONSCountAggregateOutputType> | number
           }
         }
       }
@@ -931,6 +1013,39 @@ export namespace Prisma {
   /**
    * Count Types
    */
+
+
+  /**
+   * Count Type USERSCountOutputType
+   */
+
+  export type USERSCountOutputType = {
+    SESSIONS: number
+  }
+
+  export type USERSCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    SESSIONS?: boolean | USERSCountOutputTypeCountSESSIONSArgs
+  }
+
+  // Custom InputTypes
+
+  /**
+   * USERSCountOutputType without action
+   */
+  export type USERSCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the USERSCountOutputType
+     */
+    select?: USERSCountOutputTypeSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * USERSCountOutputType without action
+   */
+  export type USERSCountOutputTypeCountSESSIONSArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SESSIONSWhereInput
+  }
 
 
 
@@ -1832,6 +1947,1057 @@ export namespace Prisma {
 
 
   /**
+   * Model SESSIONS
+   */
+
+  export type AggregateSESSIONS = {
+    _count: SESSIONSCountAggregateOutputType | null
+    _avg: SESSIONSAvgAggregateOutputType | null
+    _sum: SESSIONSSumAggregateOutputType | null
+    _min: SESSIONSMinAggregateOutputType | null
+    _max: SESSIONSMaxAggregateOutputType | null
+  }
+
+  export type SESSIONSAvgAggregateOutputType = {
+    UID: number | null
+    USER: number | null
+    rec_avail_1: number | null
+    rec_travel_time_1: number | null
+    rec_avail_2: number | null
+    rec_travel_time_2: number | null
+    rec_avail_3: number | null
+    rec_travel_time_3: number | null
+  }
+
+  export type SESSIONSSumAggregateOutputType = {
+    UID: number | null
+    USER: number | null
+    rec_avail_1: number | null
+    rec_travel_time_1: number | null
+    rec_avail_2: number | null
+    rec_travel_time_2: number | null
+    rec_avail_3: number | null
+    rec_travel_time_3: number | null
+  }
+
+  export type SESSIONSMinAggregateOutputType = {
+    UID: number | null
+    createdAt: Date | null
+    USER: number | null
+    rec_garage: string | null
+    rec_avail_1: number | null
+    rec_travel_time_1: number | null
+    rec_avail_2: number | null
+    rec_travel_time_2: number | null
+    rec_avail_3: number | null
+    rec_travel_time_3: number | null
+  }
+
+  export type SESSIONSMaxAggregateOutputType = {
+    UID: number | null
+    createdAt: Date | null
+    USER: number | null
+    rec_garage: string | null
+    rec_avail_1: number | null
+    rec_travel_time_1: number | null
+    rec_avail_2: number | null
+    rec_travel_time_2: number | null
+    rec_avail_3: number | null
+    rec_travel_time_3: number | null
+  }
+
+  export type SESSIONSCountAggregateOutputType = {
+    UID: number
+    createdAt: number
+    USER: number
+    rec_garage: number
+    rec_avail_1: number
+    rec_travel_time_1: number
+    rec_avail_2: number
+    rec_travel_time_2: number
+    rec_avail_3: number
+    rec_travel_time_3: number
+    _all: number
+  }
+
+
+  export type SESSIONSAvgAggregateInputType = {
+    UID?: true
+    USER?: true
+    rec_avail_1?: true
+    rec_travel_time_1?: true
+    rec_avail_2?: true
+    rec_travel_time_2?: true
+    rec_avail_3?: true
+    rec_travel_time_3?: true
+  }
+
+  export type SESSIONSSumAggregateInputType = {
+    UID?: true
+    USER?: true
+    rec_avail_1?: true
+    rec_travel_time_1?: true
+    rec_avail_2?: true
+    rec_travel_time_2?: true
+    rec_avail_3?: true
+    rec_travel_time_3?: true
+  }
+
+  export type SESSIONSMinAggregateInputType = {
+    UID?: true
+    createdAt?: true
+    USER?: true
+    rec_garage?: true
+    rec_avail_1?: true
+    rec_travel_time_1?: true
+    rec_avail_2?: true
+    rec_travel_time_2?: true
+    rec_avail_3?: true
+    rec_travel_time_3?: true
+  }
+
+  export type SESSIONSMaxAggregateInputType = {
+    UID?: true
+    createdAt?: true
+    USER?: true
+    rec_garage?: true
+    rec_avail_1?: true
+    rec_travel_time_1?: true
+    rec_avail_2?: true
+    rec_travel_time_2?: true
+    rec_avail_3?: true
+    rec_travel_time_3?: true
+  }
+
+  export type SESSIONSCountAggregateInputType = {
+    UID?: true
+    createdAt?: true
+    USER?: true
+    rec_garage?: true
+    rec_avail_1?: true
+    rec_travel_time_1?: true
+    rec_avail_2?: true
+    rec_travel_time_2?: true
+    rec_avail_3?: true
+    rec_travel_time_3?: true
+    _all?: true
+  }
+
+  export type SESSIONSAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SESSIONS to aggregate.
+     */
+    where?: SESSIONSWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SESSIONS to fetch.
+     */
+    orderBy?: SESSIONSOrderByWithRelationInput | SESSIONSOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SESSIONSWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SESSIONS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SESSIONS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SESSIONS
+    **/
+    _count?: true | SESSIONSCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SESSIONSAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SESSIONSSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SESSIONSMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SESSIONSMaxAggregateInputType
+  }
+
+  export type GetSESSIONSAggregateType<T extends SESSIONSAggregateArgs> = {
+        [P in keyof T & keyof AggregateSESSIONS]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSESSIONS[P]>
+      : GetScalarType<T[P], AggregateSESSIONS[P]>
+  }
+
+
+
+
+  export type SESSIONSGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SESSIONSWhereInput
+    orderBy?: SESSIONSOrderByWithAggregationInput | SESSIONSOrderByWithAggregationInput[]
+    by: SESSIONSScalarFieldEnum[] | SESSIONSScalarFieldEnum
+    having?: SESSIONSScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SESSIONSCountAggregateInputType | true
+    _avg?: SESSIONSAvgAggregateInputType
+    _sum?: SESSIONSSumAggregateInputType
+    _min?: SESSIONSMinAggregateInputType
+    _max?: SESSIONSMaxAggregateInputType
+  }
+
+  export type SESSIONSGroupByOutputType = {
+    UID: number
+    createdAt: Date | null
+    USER: number | null
+    rec_garage: string | null
+    rec_avail_1: number | null
+    rec_travel_time_1: number | null
+    rec_avail_2: number | null
+    rec_travel_time_2: number | null
+    rec_avail_3: number | null
+    rec_travel_time_3: number | null
+    _count: SESSIONSCountAggregateOutputType | null
+    _avg: SESSIONSAvgAggregateOutputType | null
+    _sum: SESSIONSSumAggregateOutputType | null
+    _min: SESSIONSMinAggregateOutputType | null
+    _max: SESSIONSMaxAggregateOutputType | null
+  }
+
+  type GetSESSIONSGroupByPayload<T extends SESSIONSGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SESSIONSGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SESSIONSGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SESSIONSGroupByOutputType[P]>
+            : GetScalarType<T[P], SESSIONSGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SESSIONSSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    UID?: boolean
+    createdAt?: boolean
+    USER?: boolean
+    rec_garage?: boolean
+    rec_avail_1?: boolean
+    rec_travel_time_1?: boolean
+    rec_avail_2?: boolean
+    rec_travel_time_2?: boolean
+    rec_avail_3?: boolean
+    rec_travel_time_3?: boolean
+    USERS?: boolean | SESSIONS$USERSArgs<ExtArgs>
+  }, ExtArgs["result"]["sESSIONS"]>
+
+  export type SESSIONSSelectScalar = {
+    UID?: boolean
+    createdAt?: boolean
+    USER?: boolean
+    rec_garage?: boolean
+    rec_avail_1?: boolean
+    rec_travel_time_1?: boolean
+    rec_avail_2?: boolean
+    rec_travel_time_2?: boolean
+    rec_avail_3?: boolean
+    rec_travel_time_3?: boolean
+  }
+
+  export type SESSIONSInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    USERS?: boolean | SESSIONS$USERSArgs<ExtArgs>
+  }
+
+
+  export type $SESSIONSPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SESSIONS"
+    objects: {
+      USERS: Prisma.$USERSPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      UID: number
+      createdAt: Date | null
+      USER: number | null
+      rec_garage: string | null
+      rec_avail_1: number | null
+      rec_travel_time_1: number | null
+      rec_avail_2: number | null
+      rec_travel_time_2: number | null
+      rec_avail_3: number | null
+      rec_travel_time_3: number | null
+    }, ExtArgs["result"]["sESSIONS"]>
+    composites: {}
+  }
+
+
+  type SESSIONSGetPayload<S extends boolean | null | undefined | SESSIONSDefaultArgs> = $Result.GetResult<Prisma.$SESSIONSPayload, S>
+
+  type SESSIONSCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<SESSIONSFindManyArgs, 'select' | 'include'> & {
+      select?: SESSIONSCountAggregateInputType | true
+    }
+
+  export interface SESSIONSDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SESSIONS'], meta: { name: 'SESSIONS' } }
+    /**
+     * Find zero or one SESSIONS that matches the filter.
+     * @param {SESSIONSFindUniqueArgs} args - Arguments to find a SESSIONS
+     * @example
+     * // Get one SESSIONS
+     * const sESSIONS = await prisma.sESSIONS.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends SESSIONSFindUniqueArgs<ExtArgs>>(
+      args: SelectSubset<T, SESSIONSFindUniqueArgs<ExtArgs>>
+    ): Prisma__SESSIONSClient<$Result.GetResult<Prisma.$SESSIONSPayload<ExtArgs>, T, 'findUnique'> | null, null, ExtArgs>
+
+    /**
+     * Find one SESSIONS that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {SESSIONSFindUniqueOrThrowArgs} args - Arguments to find a SESSIONS
+     * @example
+     * // Get one SESSIONS
+     * const sESSIONS = await prisma.sESSIONS.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends SESSIONSFindUniqueOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, SESSIONSFindUniqueOrThrowArgs<ExtArgs>>
+    ): Prisma__SESSIONSClient<$Result.GetResult<Prisma.$SESSIONSPayload<ExtArgs>, T, 'findUniqueOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find the first SESSIONS that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SESSIONSFindFirstArgs} args - Arguments to find a SESSIONS
+     * @example
+     * // Get one SESSIONS
+     * const sESSIONS = await prisma.sESSIONS.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends SESSIONSFindFirstArgs<ExtArgs>>(
+      args?: SelectSubset<T, SESSIONSFindFirstArgs<ExtArgs>>
+    ): Prisma__SESSIONSClient<$Result.GetResult<Prisma.$SESSIONSPayload<ExtArgs>, T, 'findFirst'> | null, null, ExtArgs>
+
+    /**
+     * Find the first SESSIONS that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SESSIONSFindFirstOrThrowArgs} args - Arguments to find a SESSIONS
+     * @example
+     * // Get one SESSIONS
+     * const sESSIONS = await prisma.sESSIONS.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends SESSIONSFindFirstOrThrowArgs<ExtArgs>>(
+      args?: SelectSubset<T, SESSIONSFindFirstOrThrowArgs<ExtArgs>>
+    ): Prisma__SESSIONSClient<$Result.GetResult<Prisma.$SESSIONSPayload<ExtArgs>, T, 'findFirstOrThrow'>, never, ExtArgs>
+
+    /**
+     * Find zero or more SESSIONS that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SESSIONSFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SESSIONS
+     * const sESSIONS = await prisma.sESSIONS.findMany()
+     * 
+     * // Get first 10 SESSIONS
+     * const sESSIONS = await prisma.sESSIONS.findMany({ take: 10 })
+     * 
+     * // Only select the `UID`
+     * const sESSIONSWithUIDOnly = await prisma.sESSIONS.findMany({ select: { UID: true } })
+     * 
+    **/
+    findMany<T extends SESSIONSFindManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, SESSIONSFindManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SESSIONSPayload<ExtArgs>, T, 'findMany'>>
+
+    /**
+     * Create a SESSIONS.
+     * @param {SESSIONSCreateArgs} args - Arguments to create a SESSIONS.
+     * @example
+     * // Create one SESSIONS
+     * const SESSIONS = await prisma.sESSIONS.create({
+     *   data: {
+     *     // ... data to create a SESSIONS
+     *   }
+     * })
+     * 
+    **/
+    create<T extends SESSIONSCreateArgs<ExtArgs>>(
+      args: SelectSubset<T, SESSIONSCreateArgs<ExtArgs>>
+    ): Prisma__SESSIONSClient<$Result.GetResult<Prisma.$SESSIONSPayload<ExtArgs>, T, 'create'>, never, ExtArgs>
+
+    /**
+     * Create many SESSIONS.
+     *     @param {SESSIONSCreateManyArgs} args - Arguments to create many SESSIONS.
+     *     @example
+     *     // Create many SESSIONS
+     *     const sESSIONS = await prisma.sESSIONS.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends SESSIONSCreateManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, SESSIONSCreateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a SESSIONS.
+     * @param {SESSIONSDeleteArgs} args - Arguments to delete one SESSIONS.
+     * @example
+     * // Delete one SESSIONS
+     * const SESSIONS = await prisma.sESSIONS.delete({
+     *   where: {
+     *     // ... filter to delete one SESSIONS
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends SESSIONSDeleteArgs<ExtArgs>>(
+      args: SelectSubset<T, SESSIONSDeleteArgs<ExtArgs>>
+    ): Prisma__SESSIONSClient<$Result.GetResult<Prisma.$SESSIONSPayload<ExtArgs>, T, 'delete'>, never, ExtArgs>
+
+    /**
+     * Update one SESSIONS.
+     * @param {SESSIONSUpdateArgs} args - Arguments to update one SESSIONS.
+     * @example
+     * // Update one SESSIONS
+     * const sESSIONS = await prisma.sESSIONS.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends SESSIONSUpdateArgs<ExtArgs>>(
+      args: SelectSubset<T, SESSIONSUpdateArgs<ExtArgs>>
+    ): Prisma__SESSIONSClient<$Result.GetResult<Prisma.$SESSIONSPayload<ExtArgs>, T, 'update'>, never, ExtArgs>
+
+    /**
+     * Delete zero or more SESSIONS.
+     * @param {SESSIONSDeleteManyArgs} args - Arguments to filter SESSIONS to delete.
+     * @example
+     * // Delete a few SESSIONS
+     * const { count } = await prisma.sESSIONS.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends SESSIONSDeleteManyArgs<ExtArgs>>(
+      args?: SelectSubset<T, SESSIONSDeleteManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SESSIONS.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SESSIONSUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SESSIONS
+     * const sESSIONS = await prisma.sESSIONS.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends SESSIONSUpdateManyArgs<ExtArgs>>(
+      args: SelectSubset<T, SESSIONSUpdateManyArgs<ExtArgs>>
+    ): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one SESSIONS.
+     * @param {SESSIONSUpsertArgs} args - Arguments to update or create a SESSIONS.
+     * @example
+     * // Update or create a SESSIONS
+     * const sESSIONS = await prisma.sESSIONS.upsert({
+     *   create: {
+     *     // ... data to create a SESSIONS
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SESSIONS we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends SESSIONSUpsertArgs<ExtArgs>>(
+      args: SelectSubset<T, SESSIONSUpsertArgs<ExtArgs>>
+    ): Prisma__SESSIONSClient<$Result.GetResult<Prisma.$SESSIONSPayload<ExtArgs>, T, 'upsert'>, never, ExtArgs>
+
+    /**
+     * Count the number of SESSIONS.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SESSIONSCountArgs} args - Arguments to filter SESSIONS to count.
+     * @example
+     * // Count the number of SESSIONS
+     * const count = await prisma.sESSIONS.count({
+     *   where: {
+     *     // ... the filter for the SESSIONS we want to count
+     *   }
+     * })
+    **/
+    count<T extends SESSIONSCountArgs>(
+      args?: Subset<T, SESSIONSCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SESSIONSCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SESSIONS.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SESSIONSAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SESSIONSAggregateArgs>(args: Subset<T, SESSIONSAggregateArgs>): Prisma.PrismaPromise<GetSESSIONSAggregateType<T>>
+
+    /**
+     * Group by SESSIONS.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SESSIONSGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SESSIONSGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SESSIONSGroupByArgs['orderBy'] }
+        : { orderBy?: SESSIONSGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SESSIONSGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSESSIONSGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SESSIONS model
+   */
+  readonly fields: SESSIONSFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SESSIONS.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SESSIONSClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+
+    USERS<T extends SESSIONS$USERSArgs<ExtArgs> = {}>(args?: Subset<T, SESSIONS$USERSArgs<ExtArgs>>): Prisma__USERSClient<$Result.GetResult<Prisma.$USERSPayload<ExtArgs>, T, 'findUniqueOrThrow'> | null, null, ExtArgs>;
+
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>;
+  }
+
+
+
+  /**
+   * Fields of the SESSIONS model
+   */ 
+  interface SESSIONSFieldRefs {
+    readonly UID: FieldRef<"SESSIONS", 'Int'>
+    readonly createdAt: FieldRef<"SESSIONS", 'DateTime'>
+    readonly USER: FieldRef<"SESSIONS", 'Int'>
+    readonly rec_garage: FieldRef<"SESSIONS", 'String'>
+    readonly rec_avail_1: FieldRef<"SESSIONS", 'Int'>
+    readonly rec_travel_time_1: FieldRef<"SESSIONS", 'Int'>
+    readonly rec_avail_2: FieldRef<"SESSIONS", 'Int'>
+    readonly rec_travel_time_2: FieldRef<"SESSIONS", 'Int'>
+    readonly rec_avail_3: FieldRef<"SESSIONS", 'Int'>
+    readonly rec_travel_time_3: FieldRef<"SESSIONS", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+
+  /**
+   * SESSIONS findUnique
+   */
+  export type SESSIONSFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SESSIONS
+     */
+    select?: SESSIONSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SESSIONSInclude<ExtArgs> | null
+    /**
+     * Filter, which SESSIONS to fetch.
+     */
+    where: SESSIONSWhereUniqueInput
+  }
+
+
+  /**
+   * SESSIONS findUniqueOrThrow
+   */
+  export type SESSIONSFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SESSIONS
+     */
+    select?: SESSIONSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SESSIONSInclude<ExtArgs> | null
+    /**
+     * Filter, which SESSIONS to fetch.
+     */
+    where: SESSIONSWhereUniqueInput
+  }
+
+
+  /**
+   * SESSIONS findFirst
+   */
+  export type SESSIONSFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SESSIONS
+     */
+    select?: SESSIONSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SESSIONSInclude<ExtArgs> | null
+    /**
+     * Filter, which SESSIONS to fetch.
+     */
+    where?: SESSIONSWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SESSIONS to fetch.
+     */
+    orderBy?: SESSIONSOrderByWithRelationInput | SESSIONSOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SESSIONS.
+     */
+    cursor?: SESSIONSWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SESSIONS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SESSIONS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SESSIONS.
+     */
+    distinct?: SESSIONSScalarFieldEnum | SESSIONSScalarFieldEnum[]
+  }
+
+
+  /**
+   * SESSIONS findFirstOrThrow
+   */
+  export type SESSIONSFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SESSIONS
+     */
+    select?: SESSIONSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SESSIONSInclude<ExtArgs> | null
+    /**
+     * Filter, which SESSIONS to fetch.
+     */
+    where?: SESSIONSWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SESSIONS to fetch.
+     */
+    orderBy?: SESSIONSOrderByWithRelationInput | SESSIONSOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SESSIONS.
+     */
+    cursor?: SESSIONSWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SESSIONS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SESSIONS.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SESSIONS.
+     */
+    distinct?: SESSIONSScalarFieldEnum | SESSIONSScalarFieldEnum[]
+  }
+
+
+  /**
+   * SESSIONS findMany
+   */
+  export type SESSIONSFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SESSIONS
+     */
+    select?: SESSIONSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SESSIONSInclude<ExtArgs> | null
+    /**
+     * Filter, which SESSIONS to fetch.
+     */
+    where?: SESSIONSWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SESSIONS to fetch.
+     */
+    orderBy?: SESSIONSOrderByWithRelationInput | SESSIONSOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SESSIONS.
+     */
+    cursor?: SESSIONSWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SESSIONS from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SESSIONS.
+     */
+    skip?: number
+    distinct?: SESSIONSScalarFieldEnum | SESSIONSScalarFieldEnum[]
+  }
+
+
+  /**
+   * SESSIONS create
+   */
+  export type SESSIONSCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SESSIONS
+     */
+    select?: SESSIONSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SESSIONSInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SESSIONS.
+     */
+    data?: XOR<SESSIONSCreateInput, SESSIONSUncheckedCreateInput>
+  }
+
+
+  /**
+   * SESSIONS createMany
+   */
+  export type SESSIONSCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SESSIONS.
+     */
+    data: SESSIONSCreateManyInput | SESSIONSCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * SESSIONS update
+   */
+  export type SESSIONSUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SESSIONS
+     */
+    select?: SESSIONSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SESSIONSInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SESSIONS.
+     */
+    data: XOR<SESSIONSUpdateInput, SESSIONSUncheckedUpdateInput>
+    /**
+     * Choose, which SESSIONS to update.
+     */
+    where: SESSIONSWhereUniqueInput
+  }
+
+
+  /**
+   * SESSIONS updateMany
+   */
+  export type SESSIONSUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SESSIONS.
+     */
+    data: XOR<SESSIONSUpdateManyMutationInput, SESSIONSUncheckedUpdateManyInput>
+    /**
+     * Filter which SESSIONS to update
+     */
+    where?: SESSIONSWhereInput
+  }
+
+
+  /**
+   * SESSIONS upsert
+   */
+  export type SESSIONSUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SESSIONS
+     */
+    select?: SESSIONSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SESSIONSInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SESSIONS to update in case it exists.
+     */
+    where: SESSIONSWhereUniqueInput
+    /**
+     * In case the SESSIONS found by the `where` argument doesn't exist, create a new SESSIONS with this data.
+     */
+    create: XOR<SESSIONSCreateInput, SESSIONSUncheckedCreateInput>
+    /**
+     * In case the SESSIONS was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SESSIONSUpdateInput, SESSIONSUncheckedUpdateInput>
+  }
+
+
+  /**
+   * SESSIONS delete
+   */
+  export type SESSIONSDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SESSIONS
+     */
+    select?: SESSIONSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SESSIONSInclude<ExtArgs> | null
+    /**
+     * Filter which SESSIONS to delete.
+     */
+    where: SESSIONSWhereUniqueInput
+  }
+
+
+  /**
+   * SESSIONS deleteMany
+   */
+  export type SESSIONSDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SESSIONS to delete
+     */
+    where?: SESSIONSWhereInput
+  }
+
+
+  /**
+   * SESSIONS.USERS
+   */
+  export type SESSIONS$USERSArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the USERS
+     */
+    select?: USERSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: USERSInclude<ExtArgs> | null
+    where?: USERSWhereInput
+  }
+
+
+  /**
+   * SESSIONS without action
+   */
+  export type SESSIONSDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SESSIONS
+     */
+    select?: SESSIONSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SESSIONSInclude<ExtArgs> | null
+  }
+
+
+
+  /**
    * Model USERS
    */
 
@@ -1853,35 +3019,35 @@ export namespace Prisma {
 
   export type USERSMinAggregateOutputType = {
     UID: number | null
+    createdAt: Date | null
     name: string | null
     username: string | null
     password: string | null
     parking_pass_type: string | null
     address: string | null
     bio: string | null
-    createdAt: Date | null
   }
 
   export type USERSMaxAggregateOutputType = {
     UID: number | null
+    createdAt: Date | null
     name: string | null
     username: string | null
     password: string | null
     parking_pass_type: string | null
     address: string | null
     bio: string | null
-    createdAt: Date | null
   }
 
   export type USERSCountAggregateOutputType = {
     UID: number
+    createdAt: number
     name: number
     username: number
     password: number
     parking_pass_type: number
     address: number
     bio: number
-    createdAt: number
     _all: number
   }
 
@@ -1896,35 +3062,35 @@ export namespace Prisma {
 
   export type USERSMinAggregateInputType = {
     UID?: true
+    createdAt?: true
     name?: true
     username?: true
     password?: true
     parking_pass_type?: true
     address?: true
     bio?: true
-    createdAt?: true
   }
 
   export type USERSMaxAggregateInputType = {
     UID?: true
+    createdAt?: true
     name?: true
     username?: true
     password?: true
     parking_pass_type?: true
     address?: true
     bio?: true
-    createdAt?: true
   }
 
   export type USERSCountAggregateInputType = {
     UID?: true
+    createdAt?: true
     name?: true
     username?: true
     password?: true
     parking_pass_type?: true
     address?: true
     bio?: true
-    createdAt?: true
     _all?: true
   }
 
@@ -2016,13 +3182,13 @@ export namespace Prisma {
 
   export type USERSGroupByOutputType = {
     UID: number
+    createdAt: Date | null
     name: string | null
     username: string | null
     password: string | null
     parking_pass_type: string | null
     address: string | null
     bio: string | null
-    createdAt: Date
     _count: USERSCountAggregateOutputType | null
     _avg: USERSAvgAggregateOutputType | null
     _sum: USERSSumAggregateOutputType | null
@@ -2046,39 +3212,48 @@ export namespace Prisma {
 
   export type USERSSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     UID?: boolean
+    createdAt?: boolean
     name?: boolean
     username?: boolean
     password?: boolean
     parking_pass_type?: boolean
     address?: boolean
     bio?: boolean
-    createdAt?: boolean
+    SESSIONS?: boolean | USERS$SESSIONSArgs<ExtArgs>
+    _count?: boolean | USERSCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["uSERS"]>
 
   export type USERSSelectScalar = {
     UID?: boolean
+    createdAt?: boolean
     name?: boolean
     username?: boolean
     password?: boolean
     parking_pass_type?: boolean
     address?: boolean
     bio?: boolean
-    createdAt?: boolean
+  }
+
+  export type USERSInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    SESSIONS?: boolean | USERS$SESSIONSArgs<ExtArgs>
+    _count?: boolean | USERSCountOutputTypeDefaultArgs<ExtArgs>
   }
 
 
   export type $USERSPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "USERS"
-    objects: {}
+    objects: {
+      SESSIONS: Prisma.$SESSIONSPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       UID: number
+      createdAt: Date | null
       name: string | null
       username: string | null
       password: string | null
       parking_pass_type: string | null
       address: string | null
       bio: string | null
-      createdAt: Date
     }, ExtArgs["result"]["uSERS"]>
     composites: {}
   }
@@ -2444,6 +3619,7 @@ export namespace Prisma {
   export interface Prisma__USERSClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: 'PrismaPromise';
 
+    SESSIONS<T extends USERS$SESSIONSArgs<ExtArgs> = {}>(args?: Subset<T, USERS$SESSIONSArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SESSIONSPayload<ExtArgs>, T, 'findMany'> | Null>;
 
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2474,13 +3650,13 @@ export namespace Prisma {
    */ 
   interface USERSFieldRefs {
     readonly UID: FieldRef<"USERS", 'Int'>
+    readonly createdAt: FieldRef<"USERS", 'DateTime'>
     readonly name: FieldRef<"USERS", 'String'>
     readonly username: FieldRef<"USERS", 'String'>
     readonly password: FieldRef<"USERS", 'String'>
     readonly parking_pass_type: FieldRef<"USERS", 'String'>
     readonly address: FieldRef<"USERS", 'String'>
     readonly bio: FieldRef<"USERS", 'String'>
-    readonly createdAt: FieldRef<"USERS", 'DateTime'>
   }
     
 
@@ -2494,6 +3670,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the USERS
      */
     select?: USERSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: USERSInclude<ExtArgs> | null
     /**
      * Filter, which USERS to fetch.
      */
@@ -2510,6 +3690,10 @@ export namespace Prisma {
      */
     select?: USERSSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: USERSInclude<ExtArgs> | null
+    /**
      * Filter, which USERS to fetch.
      */
     where: USERSWhereUniqueInput
@@ -2524,6 +3708,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the USERS
      */
     select?: USERSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: USERSInclude<ExtArgs> | null
     /**
      * Filter, which USERS to fetch.
      */
@@ -2570,6 +3758,10 @@ export namespace Prisma {
      */
     select?: USERSSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: USERSInclude<ExtArgs> | null
+    /**
      * Filter, which USERS to fetch.
      */
     where?: USERSWhereInput
@@ -2615,6 +3807,10 @@ export namespace Prisma {
      */
     select?: USERSSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: USERSInclude<ExtArgs> | null
+    /**
      * Filter, which USERS to fetch.
      */
     where?: USERSWhereInput
@@ -2655,6 +3851,10 @@ export namespace Prisma {
      */
     select?: USERSSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: USERSInclude<ExtArgs> | null
+    /**
      * The data needed to create a USERS.
      */
     data?: XOR<USERSCreateInput, USERSUncheckedCreateInput>
@@ -2681,6 +3881,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the USERS
      */
     select?: USERSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: USERSInclude<ExtArgs> | null
     /**
      * The data needed to update a USERS.
      */
@@ -2716,6 +3920,10 @@ export namespace Prisma {
      */
     select?: USERSSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: USERSInclude<ExtArgs> | null
+    /**
      * The filter to search for the USERS to update in case it exists.
      */
     where: USERSWhereUniqueInput
@@ -2739,6 +3947,10 @@ export namespace Prisma {
      */
     select?: USERSSelect<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: USERSInclude<ExtArgs> | null
+    /**
      * Filter which USERS to delete.
      */
     where: USERSWhereUniqueInput
@@ -2757,6 +3969,27 @@ export namespace Prisma {
 
 
   /**
+   * USERS.SESSIONS
+   */
+  export type USERS$SESSIONSArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SESSIONS
+     */
+    select?: SESSIONSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: SESSIONSInclude<ExtArgs> | null
+    where?: SESSIONSWhereInput
+    orderBy?: SESSIONSOrderByWithRelationInput | SESSIONSOrderByWithRelationInput[]
+    cursor?: SESSIONSWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SESSIONSScalarFieldEnum | SESSIONSScalarFieldEnum[]
+  }
+
+
+  /**
    * USERS without action
    */
   export type USERSDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2764,6 +3997,10 @@ export namespace Prisma {
      * Select specific fields to fetch from the USERS
      */
     select?: USERSSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     */
+    include?: USERSInclude<ExtArgs> | null
   }
 
 
@@ -2792,15 +4029,31 @@ export namespace Prisma {
   export type DATABASECHANGELOGLOCKScalarFieldEnum = (typeof DATABASECHANGELOGLOCKScalarFieldEnum)[keyof typeof DATABASECHANGELOGLOCKScalarFieldEnum]
 
 
+  export const SESSIONSScalarFieldEnum: {
+    UID: 'UID',
+    createdAt: 'createdAt',
+    USER: 'USER',
+    rec_garage: 'rec_garage',
+    rec_avail_1: 'rec_avail_1',
+    rec_travel_time_1: 'rec_travel_time_1',
+    rec_avail_2: 'rec_avail_2',
+    rec_travel_time_2: 'rec_travel_time_2',
+    rec_avail_3: 'rec_avail_3',
+    rec_travel_time_3: 'rec_travel_time_3'
+  };
+
+  export type SESSIONSScalarFieldEnum = (typeof SESSIONSScalarFieldEnum)[keyof typeof SESSIONSScalarFieldEnum]
+
+
   export const USERSScalarFieldEnum: {
     UID: 'UID',
+    createdAt: 'createdAt',
     name: 'name',
     username: 'username',
     password: 'password',
     parking_pass_type: 'parking_pass_type',
     address: 'address',
-    bio: 'bio',
-    createdAt: 'createdAt'
+    bio: 'bio'
   };
 
   export type USERSScalarFieldEnum = (typeof USERSScalarFieldEnum)[keyof typeof USERSScalarFieldEnum]
@@ -2914,29 +4167,113 @@ export namespace Prisma {
     LOCKEDBY?: StringNullableWithAggregatesFilter<"DATABASECHANGELOGLOCK"> | string | null
   }
 
+  export type SESSIONSWhereInput = {
+    AND?: SESSIONSWhereInput | SESSIONSWhereInput[]
+    OR?: SESSIONSWhereInput[]
+    NOT?: SESSIONSWhereInput | SESSIONSWhereInput[]
+    UID?: IntFilter<"SESSIONS"> | number
+    createdAt?: DateTimeNullableFilter<"SESSIONS"> | Date | string | null
+    USER?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_garage?: StringNullableFilter<"SESSIONS"> | string | null
+    rec_avail_1?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_travel_time_1?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_avail_2?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_travel_time_2?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_avail_3?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_travel_time_3?: IntNullableFilter<"SESSIONS"> | number | null
+    USERS?: XOR<USERSNullableRelationFilter, USERSWhereInput> | null
+  }
+
+  export type SESSIONSOrderByWithRelationInput = {
+    UID?: SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    USER?: SortOrderInput | SortOrder
+    rec_garage?: SortOrderInput | SortOrder
+    rec_avail_1?: SortOrderInput | SortOrder
+    rec_travel_time_1?: SortOrderInput | SortOrder
+    rec_avail_2?: SortOrderInput | SortOrder
+    rec_travel_time_2?: SortOrderInput | SortOrder
+    rec_avail_3?: SortOrderInput | SortOrder
+    rec_travel_time_3?: SortOrderInput | SortOrder
+    USERS?: USERSOrderByWithRelationInput
+  }
+
+  export type SESSIONSWhereUniqueInput = Prisma.AtLeast<{
+    UID?: number
+    AND?: SESSIONSWhereInput | SESSIONSWhereInput[]
+    OR?: SESSIONSWhereInput[]
+    NOT?: SESSIONSWhereInput | SESSIONSWhereInput[]
+    createdAt?: DateTimeNullableFilter<"SESSIONS"> | Date | string | null
+    USER?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_garage?: StringNullableFilter<"SESSIONS"> | string | null
+    rec_avail_1?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_travel_time_1?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_avail_2?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_travel_time_2?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_avail_3?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_travel_time_3?: IntNullableFilter<"SESSIONS"> | number | null
+    USERS?: XOR<USERSNullableRelationFilter, USERSWhereInput> | null
+  }, "UID">
+
+  export type SESSIONSOrderByWithAggregationInput = {
+    UID?: SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    USER?: SortOrderInput | SortOrder
+    rec_garage?: SortOrderInput | SortOrder
+    rec_avail_1?: SortOrderInput | SortOrder
+    rec_travel_time_1?: SortOrderInput | SortOrder
+    rec_avail_2?: SortOrderInput | SortOrder
+    rec_travel_time_2?: SortOrderInput | SortOrder
+    rec_avail_3?: SortOrderInput | SortOrder
+    rec_travel_time_3?: SortOrderInput | SortOrder
+    _count?: SESSIONSCountOrderByAggregateInput
+    _avg?: SESSIONSAvgOrderByAggregateInput
+    _max?: SESSIONSMaxOrderByAggregateInput
+    _min?: SESSIONSMinOrderByAggregateInput
+    _sum?: SESSIONSSumOrderByAggregateInput
+  }
+
+  export type SESSIONSScalarWhereWithAggregatesInput = {
+    AND?: SESSIONSScalarWhereWithAggregatesInput | SESSIONSScalarWhereWithAggregatesInput[]
+    OR?: SESSIONSScalarWhereWithAggregatesInput[]
+    NOT?: SESSIONSScalarWhereWithAggregatesInput | SESSIONSScalarWhereWithAggregatesInput[]
+    UID?: IntWithAggregatesFilter<"SESSIONS"> | number
+    createdAt?: DateTimeNullableWithAggregatesFilter<"SESSIONS"> | Date | string | null
+    USER?: IntNullableWithAggregatesFilter<"SESSIONS"> | number | null
+    rec_garage?: StringNullableWithAggregatesFilter<"SESSIONS"> | string | null
+    rec_avail_1?: IntNullableWithAggregatesFilter<"SESSIONS"> | number | null
+    rec_travel_time_1?: IntNullableWithAggregatesFilter<"SESSIONS"> | number | null
+    rec_avail_2?: IntNullableWithAggregatesFilter<"SESSIONS"> | number | null
+    rec_travel_time_2?: IntNullableWithAggregatesFilter<"SESSIONS"> | number | null
+    rec_avail_3?: IntNullableWithAggregatesFilter<"SESSIONS"> | number | null
+    rec_travel_time_3?: IntNullableWithAggregatesFilter<"SESSIONS"> | number | null
+  }
+
   export type USERSWhereInput = {
     AND?: USERSWhereInput | USERSWhereInput[]
     OR?: USERSWhereInput[]
     NOT?: USERSWhereInput | USERSWhereInput[]
     UID?: IntFilter<"USERS"> | number
+    createdAt?: DateTimeNullableFilter<"USERS"> | Date | string | null
     name?: StringNullableFilter<"USERS"> | string | null
     username?: StringNullableFilter<"USERS"> | string | null
     password?: StringNullableFilter<"USERS"> | string | null
     parking_pass_type?: StringNullableFilter<"USERS"> | string | null
     address?: StringNullableFilter<"USERS"> | string | null
     bio?: StringNullableFilter<"USERS"> | string | null
-    createdAt?: DateTimeFilter<"USERS"> | Date | string
+    SESSIONS?: SESSIONSListRelationFilter
   }
 
   export type USERSOrderByWithRelationInput = {
     UID?: SortOrder
+    createdAt?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     password?: SortOrderInput | SortOrder
     parking_pass_type?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
+    SESSIONS?: SESSIONSOrderByRelationAggregateInput
   }
 
   export type USERSWhereUniqueInput = Prisma.AtLeast<{
@@ -2944,24 +4281,25 @@ export namespace Prisma {
     AND?: USERSWhereInput | USERSWhereInput[]
     OR?: USERSWhereInput[]
     NOT?: USERSWhereInput | USERSWhereInput[]
+    createdAt?: DateTimeNullableFilter<"USERS"> | Date | string | null
     name?: StringNullableFilter<"USERS"> | string | null
     username?: StringNullableFilter<"USERS"> | string | null
     password?: StringNullableFilter<"USERS"> | string | null
     parking_pass_type?: StringNullableFilter<"USERS"> | string | null
     address?: StringNullableFilter<"USERS"> | string | null
     bio?: StringNullableFilter<"USERS"> | string | null
-    createdAt?: DateTimeFilter<"USERS"> | Date | string
+    SESSIONS?: SESSIONSListRelationFilter
   }, "UID">
 
   export type USERSOrderByWithAggregationInput = {
     UID?: SortOrder
+    createdAt?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     password?: SortOrderInput | SortOrder
     parking_pass_type?: SortOrderInput | SortOrder
     address?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
     _count?: USERSCountOrderByAggregateInput
     _avg?: USERSAvgOrderByAggregateInput
     _max?: USERSMaxOrderByAggregateInput
@@ -2974,13 +4312,13 @@ export namespace Prisma {
     OR?: USERSScalarWhereWithAggregatesInput[]
     NOT?: USERSScalarWhereWithAggregatesInput | USERSScalarWhereWithAggregatesInput[]
     UID?: IntWithAggregatesFilter<"USERS"> | number
+    createdAt?: DateTimeNullableWithAggregatesFilter<"USERS"> | Date | string | null
     name?: StringNullableWithAggregatesFilter<"USERS"> | string | null
     username?: StringNullableWithAggregatesFilter<"USERS"> | string | null
     password?: StringNullableWithAggregatesFilter<"USERS"> | string | null
     parking_pass_type?: StringNullableWithAggregatesFilter<"USERS"> | string | null
     address?: StringNullableWithAggregatesFilter<"USERS"> | string | null
     bio?: StringNullableWithAggregatesFilter<"USERS"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"USERS"> | Date | string
   }
 
   export type DATABASECHANGELOGLOCKCreateInput = {
@@ -3032,78 +4370,169 @@ export namespace Prisma {
     LOCKEDBY?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type SESSIONSCreateInput = {
+    createdAt?: Date | string | null
+    rec_garage?: string | null
+    rec_avail_1?: number | null
+    rec_travel_time_1?: number | null
+    rec_avail_2?: number | null
+    rec_travel_time_2?: number | null
+    rec_avail_3?: number | null
+    rec_travel_time_3?: number | null
+    USERS?: USERSCreateNestedOneWithoutSESSIONSInput
+  }
+
+  export type SESSIONSUncheckedCreateInput = {
+    UID?: number
+    createdAt?: Date | string | null
+    USER?: number | null
+    rec_garage?: string | null
+    rec_avail_1?: number | null
+    rec_travel_time_1?: number | null
+    rec_avail_2?: number | null
+    rec_travel_time_2?: number | null
+    rec_avail_3?: number | null
+    rec_travel_time_3?: number | null
+  }
+
+  export type SESSIONSUpdateInput = {
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rec_garage?: NullableStringFieldUpdateOperationsInput | string | null
+    rec_avail_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_3?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_3?: NullableIntFieldUpdateOperationsInput | number | null
+    USERS?: USERSUpdateOneWithoutSESSIONSNestedInput
+  }
+
+  export type SESSIONSUncheckedUpdateInput = {
+    UID?: IntFieldUpdateOperationsInput | number
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    USER?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_garage?: NullableStringFieldUpdateOperationsInput | string | null
+    rec_avail_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_3?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_3?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type SESSIONSCreateManyInput = {
+    UID?: number
+    createdAt?: Date | string | null
+    USER?: number | null
+    rec_garage?: string | null
+    rec_avail_1?: number | null
+    rec_travel_time_1?: number | null
+    rec_avail_2?: number | null
+    rec_travel_time_2?: number | null
+    rec_avail_3?: number | null
+    rec_travel_time_3?: number | null
+  }
+
+  export type SESSIONSUpdateManyMutationInput = {
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rec_garage?: NullableStringFieldUpdateOperationsInput | string | null
+    rec_avail_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_3?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_3?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type SESSIONSUncheckedUpdateManyInput = {
+    UID?: IntFieldUpdateOperationsInput | number
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    USER?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_garage?: NullableStringFieldUpdateOperationsInput | string | null
+    rec_avail_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_3?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_3?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type USERSCreateInput = {
+    createdAt?: Date | string | null
     name?: string | null
     username?: string | null
     password?: string | null
     parking_pass_type?: string | null
     address?: string | null
     bio?: string | null
-    createdAt?: Date | string
+    SESSIONS?: SESSIONSCreateNestedManyWithoutUSERSInput
   }
 
   export type USERSUncheckedCreateInput = {
     UID?: number
+    createdAt?: Date | string | null
     name?: string | null
     username?: string | null
     password?: string | null
     parking_pass_type?: string | null
     address?: string | null
     bio?: string | null
-    createdAt?: Date | string
+    SESSIONS?: SESSIONSUncheckedCreateNestedManyWithoutUSERSInput
   }
 
   export type USERSUpdateInput = {
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    SESSIONS?: SESSIONSUpdateManyWithoutUSERSNestedInput
   }
 
   export type USERSUncheckedUpdateInput = {
     UID?: IntFieldUpdateOperationsInput | number
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    SESSIONS?: SESSIONSUncheckedUpdateManyWithoutUSERSNestedInput
   }
 
   export type USERSCreateManyInput = {
     UID?: number
+    createdAt?: Date | string | null
     name?: string | null
     username?: string | null
     password?: string | null
     parking_pass_type?: string | null
     address?: string | null
     bio?: string | null
-    createdAt?: Date | string
   }
 
   export type USERSUpdateManyMutationInput = {
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type USERSUncheckedUpdateManyInput = {
     UID?: IntFieldUpdateOperationsInput | number
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
     address?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -3236,26 +4665,118 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type USERSNullableRelationFilter = {
+    is?: USERSWhereInput | null
+    isNot?: USERSWhereInput | null
+  }
+
+  export type SESSIONSCountOrderByAggregateInput = {
+    UID?: SortOrder
+    createdAt?: SortOrder
+    USER?: SortOrder
+    rec_garage?: SortOrder
+    rec_avail_1?: SortOrder
+    rec_travel_time_1?: SortOrder
+    rec_avail_2?: SortOrder
+    rec_travel_time_2?: SortOrder
+    rec_avail_3?: SortOrder
+    rec_travel_time_3?: SortOrder
+  }
+
+  export type SESSIONSAvgOrderByAggregateInput = {
+    UID?: SortOrder
+    USER?: SortOrder
+    rec_avail_1?: SortOrder
+    rec_travel_time_1?: SortOrder
+    rec_avail_2?: SortOrder
+    rec_travel_time_2?: SortOrder
+    rec_avail_3?: SortOrder
+    rec_travel_time_3?: SortOrder
+  }
+
+  export type SESSIONSMaxOrderByAggregateInput = {
+    UID?: SortOrder
+    createdAt?: SortOrder
+    USER?: SortOrder
+    rec_garage?: SortOrder
+    rec_avail_1?: SortOrder
+    rec_travel_time_1?: SortOrder
+    rec_avail_2?: SortOrder
+    rec_travel_time_2?: SortOrder
+    rec_avail_3?: SortOrder
+    rec_travel_time_3?: SortOrder
+  }
+
+  export type SESSIONSMinOrderByAggregateInput = {
+    UID?: SortOrder
+    createdAt?: SortOrder
+    USER?: SortOrder
+    rec_garage?: SortOrder
+    rec_avail_1?: SortOrder
+    rec_travel_time_1?: SortOrder
+    rec_avail_2?: SortOrder
+    rec_travel_time_2?: SortOrder
+    rec_avail_3?: SortOrder
+    rec_travel_time_3?: SortOrder
+  }
+
+  export type SESSIONSSumOrderByAggregateInput = {
+    UID?: SortOrder
+    USER?: SortOrder
+    rec_avail_1?: SortOrder
+    rec_travel_time_1?: SortOrder
+    rec_avail_2?: SortOrder
+    rec_travel_time_2?: SortOrder
+    rec_avail_3?: SortOrder
+    rec_travel_time_3?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type SESSIONSListRelationFilter = {
+    every?: SESSIONSWhereInput
+    some?: SESSIONSWhereInput
+    none?: SESSIONSWhereInput
+  }
+
+  export type SESSIONSOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type USERSCountOrderByAggregateInput = {
     UID?: SortOrder
+    createdAt?: SortOrder
     name?: SortOrder
     username?: SortOrder
     password?: SortOrder
     parking_pass_type?: SortOrder
     address?: SortOrder
     bio?: SortOrder
-    createdAt?: SortOrder
   }
 
   export type USERSAvgOrderByAggregateInput = {
@@ -3264,42 +4785,28 @@ export namespace Prisma {
 
   export type USERSMaxOrderByAggregateInput = {
     UID?: SortOrder
+    createdAt?: SortOrder
     name?: SortOrder
     username?: SortOrder
     password?: SortOrder
     parking_pass_type?: SortOrder
     address?: SortOrder
     bio?: SortOrder
-    createdAt?: SortOrder
   }
 
   export type USERSMinOrderByAggregateInput = {
     UID?: SortOrder
+    createdAt?: SortOrder
     name?: SortOrder
     username?: SortOrder
     password?: SortOrder
     parking_pass_type?: SortOrder
     address?: SortOrder
     bio?: SortOrder
-    createdAt?: SortOrder
   }
 
   export type USERSSumOrderByAggregateInput = {
     UID?: SortOrder
-  }
-
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -3322,8 +4829,70 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
+  export type USERSCreateNestedOneWithoutSESSIONSInput = {
+    create?: XOR<USERSCreateWithoutSESSIONSInput, USERSUncheckedCreateWithoutSESSIONSInput>
+    connectOrCreate?: USERSCreateOrConnectWithoutSESSIONSInput
+    connect?: USERSWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type USERSUpdateOneWithoutSESSIONSNestedInput = {
+    create?: XOR<USERSCreateWithoutSESSIONSInput, USERSUncheckedCreateWithoutSESSIONSInput>
+    connectOrCreate?: USERSCreateOrConnectWithoutSESSIONSInput
+    upsert?: USERSUpsertWithoutSESSIONSInput
+    disconnect?: USERSWhereInput | boolean
+    delete?: USERSWhereInput | boolean
+    connect?: USERSWhereUniqueInput
+    update?: XOR<XOR<USERSUpdateToOneWithWhereWithoutSESSIONSInput, USERSUpdateWithoutSESSIONSInput>, USERSUncheckedUpdateWithoutSESSIONSInput>
+  }
+
+  export type SESSIONSCreateNestedManyWithoutUSERSInput = {
+    create?: XOR<SESSIONSCreateWithoutUSERSInput, SESSIONSUncheckedCreateWithoutUSERSInput> | SESSIONSCreateWithoutUSERSInput[] | SESSIONSUncheckedCreateWithoutUSERSInput[]
+    connectOrCreate?: SESSIONSCreateOrConnectWithoutUSERSInput | SESSIONSCreateOrConnectWithoutUSERSInput[]
+    createMany?: SESSIONSCreateManyUSERSInputEnvelope
+    connect?: SESSIONSWhereUniqueInput | SESSIONSWhereUniqueInput[]
+  }
+
+  export type SESSIONSUncheckedCreateNestedManyWithoutUSERSInput = {
+    create?: XOR<SESSIONSCreateWithoutUSERSInput, SESSIONSUncheckedCreateWithoutUSERSInput> | SESSIONSCreateWithoutUSERSInput[] | SESSIONSUncheckedCreateWithoutUSERSInput[]
+    connectOrCreate?: SESSIONSCreateOrConnectWithoutUSERSInput | SESSIONSCreateOrConnectWithoutUSERSInput[]
+    createMany?: SESSIONSCreateManyUSERSInputEnvelope
+    connect?: SESSIONSWhereUniqueInput | SESSIONSWhereUniqueInput[]
+  }
+
+  export type SESSIONSUpdateManyWithoutUSERSNestedInput = {
+    create?: XOR<SESSIONSCreateWithoutUSERSInput, SESSIONSUncheckedCreateWithoutUSERSInput> | SESSIONSCreateWithoutUSERSInput[] | SESSIONSUncheckedCreateWithoutUSERSInput[]
+    connectOrCreate?: SESSIONSCreateOrConnectWithoutUSERSInput | SESSIONSCreateOrConnectWithoutUSERSInput[]
+    upsert?: SESSIONSUpsertWithWhereUniqueWithoutUSERSInput | SESSIONSUpsertWithWhereUniqueWithoutUSERSInput[]
+    createMany?: SESSIONSCreateManyUSERSInputEnvelope
+    set?: SESSIONSWhereUniqueInput | SESSIONSWhereUniqueInput[]
+    disconnect?: SESSIONSWhereUniqueInput | SESSIONSWhereUniqueInput[]
+    delete?: SESSIONSWhereUniqueInput | SESSIONSWhereUniqueInput[]
+    connect?: SESSIONSWhereUniqueInput | SESSIONSWhereUniqueInput[]
+    update?: SESSIONSUpdateWithWhereUniqueWithoutUSERSInput | SESSIONSUpdateWithWhereUniqueWithoutUSERSInput[]
+    updateMany?: SESSIONSUpdateManyWithWhereWithoutUSERSInput | SESSIONSUpdateManyWithWhereWithoutUSERSInput[]
+    deleteMany?: SESSIONSScalarWhereInput | SESSIONSScalarWhereInput[]
+  }
+
+  export type SESSIONSUncheckedUpdateManyWithoutUSERSNestedInput = {
+    create?: XOR<SESSIONSCreateWithoutUSERSInput, SESSIONSUncheckedCreateWithoutUSERSInput> | SESSIONSCreateWithoutUSERSInput[] | SESSIONSUncheckedCreateWithoutUSERSInput[]
+    connectOrCreate?: SESSIONSCreateOrConnectWithoutUSERSInput | SESSIONSCreateOrConnectWithoutUSERSInput[]
+    upsert?: SESSIONSUpsertWithWhereUniqueWithoutUSERSInput | SESSIONSUpsertWithWhereUniqueWithoutUSERSInput[]
+    createMany?: SESSIONSCreateManyUSERSInputEnvelope
+    set?: SESSIONSWhereUniqueInput | SESSIONSWhereUniqueInput[]
+    disconnect?: SESSIONSWhereUniqueInput | SESSIONSWhereUniqueInput[]
+    delete?: SESSIONSWhereUniqueInput | SESSIONSWhereUniqueInput[]
+    connect?: SESSIONSWhereUniqueInput | SESSIONSWhereUniqueInput[]
+    update?: SESSIONSUpdateWithWhereUniqueWithoutUSERSInput | SESSIONSUpdateWithWhereUniqueWithoutUSERSInput[]
+    updateMany?: SESSIONSUpdateManyWithWhereWithoutUSERSInput | SESSIONSUpdateManyWithWhereWithoutUSERSInput[]
+    deleteMany?: SESSIONSScalarWhereInput | SESSIONSScalarWhereInput[]
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -3444,29 +5013,201 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[]
-    notIn?: Date[] | string[]
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | null
+    notIn?: number[] | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type USERSCreateWithoutSESSIONSInput = {
+    createdAt?: Date | string | null
+    name?: string | null
+    username?: string | null
+    password?: string | null
+    parking_pass_type?: string | null
+    address?: string | null
+    bio?: string | null
+  }
+
+  export type USERSUncheckedCreateWithoutSESSIONSInput = {
+    UID?: number
+    createdAt?: Date | string | null
+    name?: string | null
+    username?: string | null
+    password?: string | null
+    parking_pass_type?: string | null
+    address?: string | null
+    bio?: string | null
+  }
+
+  export type USERSCreateOrConnectWithoutSESSIONSInput = {
+    where: USERSWhereUniqueInput
+    create: XOR<USERSCreateWithoutSESSIONSInput, USERSUncheckedCreateWithoutSESSIONSInput>
+  }
+
+  export type USERSUpsertWithoutSESSIONSInput = {
+    update: XOR<USERSUpdateWithoutSESSIONSInput, USERSUncheckedUpdateWithoutSESSIONSInput>
+    create: XOR<USERSCreateWithoutSESSIONSInput, USERSUncheckedCreateWithoutSESSIONSInput>
+    where?: USERSWhereInput
+  }
+
+  export type USERSUpdateToOneWithWhereWithoutSESSIONSInput = {
+    where?: USERSWhereInput
+    data: XOR<USERSUpdateWithoutSESSIONSInput, USERSUncheckedUpdateWithoutSESSIONSInput>
+  }
+
+  export type USERSUpdateWithoutSESSIONSInput = {
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type USERSUncheckedUpdateWithoutSESSIONSInput = {
+    UID?: IntFieldUpdateOperationsInput | number
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type SESSIONSCreateWithoutUSERSInput = {
+    createdAt?: Date | string | null
+    rec_garage?: string | null
+    rec_avail_1?: number | null
+    rec_travel_time_1?: number | null
+    rec_avail_2?: number | null
+    rec_travel_time_2?: number | null
+    rec_avail_3?: number | null
+    rec_travel_time_3?: number | null
+  }
+
+  export type SESSIONSUncheckedCreateWithoutUSERSInput = {
+    UID?: number
+    createdAt?: Date | string | null
+    rec_garage?: string | null
+    rec_avail_1?: number | null
+    rec_travel_time_1?: number | null
+    rec_avail_2?: number | null
+    rec_travel_time_2?: number | null
+    rec_avail_3?: number | null
+    rec_travel_time_3?: number | null
+  }
+
+  export type SESSIONSCreateOrConnectWithoutUSERSInput = {
+    where: SESSIONSWhereUniqueInput
+    create: XOR<SESSIONSCreateWithoutUSERSInput, SESSIONSUncheckedCreateWithoutUSERSInput>
+  }
+
+  export type SESSIONSCreateManyUSERSInputEnvelope = {
+    data: SESSIONSCreateManyUSERSInput | SESSIONSCreateManyUSERSInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SESSIONSUpsertWithWhereUniqueWithoutUSERSInput = {
+    where: SESSIONSWhereUniqueInput
+    update: XOR<SESSIONSUpdateWithoutUSERSInput, SESSIONSUncheckedUpdateWithoutUSERSInput>
+    create: XOR<SESSIONSCreateWithoutUSERSInput, SESSIONSUncheckedCreateWithoutUSERSInput>
+  }
+
+  export type SESSIONSUpdateWithWhereUniqueWithoutUSERSInput = {
+    where: SESSIONSWhereUniqueInput
+    data: XOR<SESSIONSUpdateWithoutUSERSInput, SESSIONSUncheckedUpdateWithoutUSERSInput>
+  }
+
+  export type SESSIONSUpdateManyWithWhereWithoutUSERSInput = {
+    where: SESSIONSScalarWhereInput
+    data: XOR<SESSIONSUpdateManyMutationInput, SESSIONSUncheckedUpdateManyWithoutUSERSInput>
+  }
+
+  export type SESSIONSScalarWhereInput = {
+    AND?: SESSIONSScalarWhereInput | SESSIONSScalarWhereInput[]
+    OR?: SESSIONSScalarWhereInput[]
+    NOT?: SESSIONSScalarWhereInput | SESSIONSScalarWhereInput[]
+    UID?: IntFilter<"SESSIONS"> | number
+    createdAt?: DateTimeNullableFilter<"SESSIONS"> | Date | string | null
+    USER?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_garage?: StringNullableFilter<"SESSIONS"> | string | null
+    rec_avail_1?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_travel_time_1?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_avail_2?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_travel_time_2?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_avail_3?: IntNullableFilter<"SESSIONS"> | number | null
+    rec_travel_time_3?: IntNullableFilter<"SESSIONS"> | number | null
+  }
+
+  export type SESSIONSCreateManyUSERSInput = {
+    UID?: number
+    createdAt?: Date | string | null
+    rec_garage?: string | null
+    rec_avail_1?: number | null
+    rec_travel_time_1?: number | null
+    rec_avail_2?: number | null
+    rec_travel_time_2?: number | null
+    rec_avail_3?: number | null
+    rec_travel_time_3?: number | null
+  }
+
+  export type SESSIONSUpdateWithoutUSERSInput = {
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rec_garage?: NullableStringFieldUpdateOperationsInput | string | null
+    rec_avail_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_3?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_3?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type SESSIONSUncheckedUpdateWithoutUSERSInput = {
+    UID?: IntFieldUpdateOperationsInput | number
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rec_garage?: NullableStringFieldUpdateOperationsInput | string | null
+    rec_avail_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_3?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_3?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type SESSIONSUncheckedUpdateManyWithoutUSERSInput = {
+    UID?: IntFieldUpdateOperationsInput | number
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    rec_garage?: NullableStringFieldUpdateOperationsInput | string | null
+    rec_avail_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_1?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_2?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_avail_3?: NullableIntFieldUpdateOperationsInput | number | null
+    rec_travel_time_3?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
 
@@ -3475,9 +5216,17 @@ export namespace Prisma {
    * Aliases for legacy arg types
    */
     /**
+     * @deprecated Use USERSCountOutputTypeDefaultArgs instead
+     */
+    export type USERSCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = USERSCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use DATABASECHANGELOGLOCKDefaultArgs instead
      */
     export type DATABASECHANGELOGLOCKArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = DATABASECHANGELOGLOCKDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use SESSIONSDefaultArgs instead
+     */
+    export type SESSIONSArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = SESSIONSDefaultArgs<ExtArgs>
     /**
      * @deprecated Use USERSDefaultArgs instead
      */

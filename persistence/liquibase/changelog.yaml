@@ -44,6 +44,12 @@ databaseChangeLog:
                     tableName: SESSIONS
                     columns:
                         - column:
+                              name: UID
+                              type: INT
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                        - column:
                               name: createdAt
                               type: TIMESTAMP
                               constraints:
