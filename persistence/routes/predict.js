@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const axios = require('axios');
+
 
 
 const { PrismaClient } = require('../prisma/generated/client'); // Adjust the path as needed
@@ -32,6 +34,17 @@ async function createSessionDB(sessionData) {
     }
 }
 
+async function callModel(garageTimes) {
+    try {
+      const response = await axios.get('http://127.0.0.1:5000', {
+        params: { horizon: garageTimes.garage1 },
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
 async function getFakeData(garageTimes) {
     const travelTimesAndOccupancy = {};
     for (const garage in garageTimes) {
@@ -62,7 +75,7 @@ router.post('/', async (req, res) => {
         return;
     }
 
-    const sessionData = await getFakeData(garageTimes);
+    const sessionData = await callModel(garageTimes);
 
     createSessionDB(sessionData);
 
