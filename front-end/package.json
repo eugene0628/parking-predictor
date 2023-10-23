@@ -15,9 +15,11 @@
 		"test:unit": "vitest"
 	},
 	"devDependencies": {
+		"@beyonk/svelte-mapbox": "^9.1.0",
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^2.0.0",
 		"@sveltejs/kit": "^1.20.4",
+		"@types/mapbox-gl": "^2.7.15",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"eslint": "^8.28.0",
@@ -32,5 +34,8 @@
 		"vite": "^4.4.2",
 		"vitest": "^0.32.2"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"mapbox-gl": "^2.15.0"
+	}
 }
