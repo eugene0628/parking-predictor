@@ -1,25 +1,22 @@
-TABLES
-
-USERS
-UID
-name
-username
-password
-parkin_pass_type
-address
-bio
-createdAt
-
-SESSIONS
-createdAt
-USER
-rec_garage
-rec_avail
-rec_travel_time
-
 http://localhost:3000/users/1
 
 npx liquibase update
 
+CLEAR DOCKER VOLUMES TO CLEAR DOCKER DATA
 docker volumes ls
-docker volums rm _
+docker volums rm
+
+To Run Back End
+
+Install Docker
+
+In persistence directory:
+npm run persistence
+npm run migrate
+npm run serve
+npm run flask
+
+To Run Front End
+
+In front-end directory
+npm run dev

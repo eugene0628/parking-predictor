@@ -45,28 +45,6 @@ async function callModel(garageTimes) {
     }
   }
 
-async function getFakeData(garageTimes) {
-    const travelTimesAndOccupancy = {};
-    for (const garage in garageTimes) {
-        const travelTime = garageTimes[garage];
-        const randomOccupancy = Math.floor(Math.random() * 100);
-
-        travelTimesAndOccupancy.user = 1;
-        travelTimesAndOccupancy.recommendation = "garage 1";
-
-
-        travelTimesAndOccupancy[garage] = {
-            travel_time: travelTime,
-            expected_occupancy: randomOccupancy
-        };
-    }
-
-    console.log("GENERATED GARAGE TIMES: ", travelTimesAndOccupancy)
-    return travelTimesAndOccupancy;
-}
-
-
-
 router.post('/', async (req, res) => {
     const garageTimes = req.body;
 
