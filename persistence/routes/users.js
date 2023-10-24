@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require('../db'); 
 
 //WIP DO NOT USE
-
 router.get('/:uid', (req, res) => {
     const uid = req.params.uid;
 
