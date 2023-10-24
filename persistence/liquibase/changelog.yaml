@@ -1,0 +1,91 @@
+databaseChangeLog:
+    - changeSet:
+          id: 1
+          author: YourName
+          changes:
+              - createTable:
+                    tableName: USERS
+                    columns:
+                        - column:
+                              name: UID
+                              type: INT
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                        - column:
+                              name: createdAt
+                              type: TIMESTAMP
+                              constraints:
+                                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                        - column:
+                              name: name
+                              type: VARCHAR(255)
+                        - column:
+                              name: username
+                              type: VARCHAR(255)
+                        - column:
+                              name: password
+                              type: VARCHAR(255)
+                        - column:
+                              name: parking_pass_type
+                              type: VARCHAR(255)
+                        - column:
+                              name: address
+                              type: VARCHAR(255)
+                        - column:
+                              name: bio
+                              type: TEXT
+
+    - changeSet:
+          id: 2
+          author: YourName
+          changes:
+              - createTable:
+                    tableName: SESSIONS
+                    columns:
+                        - column:
+                              name: UID
+                              type: INT
+                              autoIncrement: true
+                              constraints:
+                                  primaryKey: true
+                        - column:
+                              name: createdAt
+                              type: TIMESTAMP
+                              constraints:
+                                  defaultValueComputed: "CURRENT_TIMESTAMP"
+                        - column:
+                              name: USER
+                              type: INT
+                        - column:
+                              name: rec_garage
+                              type: VARCHAR(255)
+                        - column:
+                              name: rec_avail_1
+                              type: INT
+                        - column:
+                              name: rec_travel_time_1
+                              type: INT
+                        - column:
+                              name: rec_avail_2
+                              type: INT
+                        - column:
+                              name: rec_travel_time_2
+                              type: INT
+                        - column:
+                              name: rec_avail_3
+                              type: INT
+                        - column:
+                              name: rec_travel_time_3
+                              type: INT
+
+    - changeSet:
+          id: 3
+          author: YourName
+          changes:
+              - addForeignKeyConstraint:
+                    baseTableName: SESSIONS
+                    baseColumnNames: USER
+                    referencedTableName: USERS
+                    referencedColumnNames: UID
+                    constraintName: fk_USER

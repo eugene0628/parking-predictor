@@ -26,19 +26,20 @@
 		[-80.413885, 37.228099]
 	];
 
-    const routeColors = ["red", "green", "blue", "black"]
+	const routeColors = ['red', 'green', 'blue', 'black'];
 
 	// create a function to make a directions request
 	async function getRoute(end: any, id: number, timeString?: string) {
 		// make a directions request using cycling profile
 		// an arbitrary start will always be the same
 		// only the end or destination will change
-		let request = `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${accessToken}${timeString ? `&depart_at=${timeString}` : ''}`
+		let request = `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${
+			end[0]
+		},${end[1]}?steps=true&geometries=geojson&access_token=${accessToken}${
+			timeString ? `&depart_at=${timeString}` : ''
+		}`;
 		// console.log(request)
-		const query = await fetch(
-			request,
-			{ method: 'GET' }
-		);
+		const query = await fetch(request, { method: 'GET' });
 		// &depart_at=2019-05-02T15:00
 		const json = await query.json();
 		const data = json.routes[0];
@@ -88,6 +89,8 @@
 
 	onMount(() => {
 		const initialState = { lng: lng, lat: lat, zoom: zoom };
+		const accessToken =
+			'pk.eyJ1IjoiZXVnZW5lMDYyOCIsImEiOiJjbG5rcDR5NDIxcnpuMmtta2dwZTlxNXR0In0.gSkwpX1rNj13skXBncNGhg';
 		map = new Map({
 			container: mapContainer,
 			accessToken: accessToken,
@@ -141,6 +144,22 @@
 							'circle-color': '#3887be'
 						}
 					});
+				},
+				function (error) {
+					console.error('Error getting location:', error.message);
+				}
+			);
+		} else {
+			console.error('Geolocation is not supported by this browser');
+		}
+
+		if ('geolocation' in navigator) {
+			navigator.geolocation.getCurrentPosition(
+				function (position) {
+					userLat = position.coords.latitude;
+					userLng = position.coords.longitude;
+					// console.log(userLat);
+					// console.log(userLng);
 				},
 				function (error) {
 					console.error('Error getting location:', error.message);
@@ -206,16 +225,16 @@
 	});
 
 	async function markDestination(minuteGap: number) {
-		const zeroPad = (num, places) => String(num).padStart(places, '0')
+		const zeroPad = (num, places) => String(num).padStart(places, '0');
 		inputNum = 0;
 		const newTime = new Date();
-		newTime.setMinutes(newTime.getMinutes() + minuteGap)
-		let isoTimeString = newTime.toISOString()
+		newTime.setMinutes(newTime.getMinutes() + minuteGap);
+		let isoTimeString = newTime.toISOString();
 		isoTimeString = newTime.toISOString().substring(0, isoTimeString.length - 8);
 		const hours = newTime.getHours();
 		const minutes = newTime.getMinutes();
-		const timeDisplay = document.getElementById('time-display')
-		timeDisplay.innerHTML = `<h2>${zeroPad(hours % 12, 2)}:${zeroPad(minutes, 2)}</h2>`
+		const timeDisplay = document.getElementById('time-display');
+		timeDisplay.innerHTML = `<h2>${zeroPad(hours % 12, 2)}:${zeroPad(minutes, 2)}</h2>`;
 		for (const [i, coords] of garageLocations.entries()) {
 			const end = {
 				type: 'FeatureCollection',
@@ -285,30 +304,30 @@
 
 <div class="nav-bar">
 	<h1 class="title">Parking Prediction Frontend *Demo*</h1>
-	<button on:click={()=>show=!show}>Test button</button>
+	<button on:click={() => (show = !show)}>Test button</button>
 </div>
 <div class="big-container">
 	<div class="map-container">
 		{#if show}
 			<div class="arrival-menu">
-					<h2>Parking capacities when leaving at</h2>
-					<div id="time-display"></div>
-					<h3>Perry Street Garage:</h3>
-					<div id="garage0"></div>
-					<h3>Kent Square Garage:</h3>
-					<div id="garage1"></div>
-					<h3>North End Garage:</h3>
-					<div id="garage2"></div>
+				<h2>Parking capacities when leaving at</h2>
+				<div id="time-display" />
+				<h3>Perry Street Garage:</h3>
+				<div id="garage0" />
+				<h3>Kent Square Garage:</h3>
+				<div id="garage1" />
+				<h3>North End Garage:</h3>
+				<div id="garage2" />
 			</div>
-        {/if}
-		<div class="map"  style={show ? "grid-column:3/6;" : "grid-column:2/5"} bind:this={mapContainer}>
-		</div>
+		{/if}
+		<div
+			class="map"
+			style={show ? 'grid-column:3/6;' : 'grid-column:2/5'}
+			bind:this={mapContainer}
+		/>
 	</div>
 	<div class="input-container">
-		<button
-			class="action-button"
-			on:click={()=>markDestination(0)}>Leave now?</button
-		>
+		<button class="action-button" on:click={() => markDestination(0)}>Leave now?</button>
 		<div class="h-line">
 			<p class="or-word">or</p>
 		</div>
@@ -328,7 +347,7 @@
 					class="input-box"
 				/>
 			</div>
-			<button class="action-button" on:click={()=>markDestination(inputNum)}>Set</button>
+			<button class="action-button" on:click={() => markDestination(inputNum)}>Set</button>
 		</div>
 	</div>
 </div>
@@ -376,7 +395,7 @@
 	}
 
 	.map-container {
-		display:grid;
+		display: grid;
 		grid-template-columns: repeat(5, 1fr);
 		/* grid-template-rows: minmax(100px, auto); */
 		height: 60vh;
@@ -396,15 +415,15 @@
 		/* grid-column-start:3; */
 		/* grid-column-end:6; */
 		/* grid-column:3/6; */
-		height:80%;
-		align-self:center;
+		height: 80%;
+		align-self: center;
 	}
 
 	.arrival-menu {
 		/* background-color:aquamarine; */
-		grid-column:1/3;
+		grid-column: 1/3;
 		border-right: 2px solid darkgray;
-		text-align:center;
+		text-align: center;
 	}
 
 	.input-container {

@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../db'); // Import your database connection
+const db = require('../db'); 
 
+//WIP DO NOT USE
 router.get('/:uid', (req, res) => {
     const uid = req.params.uid;
 
