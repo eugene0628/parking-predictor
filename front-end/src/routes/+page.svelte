@@ -3,6 +3,9 @@
 
 	// import "../node_modules/mapbox-gl/dist/mapbox-gl.css"
 	import { onMount, onDestroy } from 'svelte';
+	import { fly } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
+	import { quintOut } from 'svelte/easing';
 
 	let map: any;
 	let mapContainer: any;
@@ -27,6 +30,7 @@
 	];
 
     const routeColors = ["red", "green", "blue", "black"]
+	let routeTimeDisplays = ['', '', '']
 
 	// create a function to make a directions request
 	async function getRoute(end: any, id: number, timeString?: string) {
@@ -76,9 +80,10 @@
 			});
 		}
 		// add turn instructions here at the end
-		const duration = document.getElementById(`garage${id}`);
+		// const duration = document.getElementById(`garage${id}`);
+		// duration.innerHTML = `<p><strong>Trip duration: ${Math.floor(data.duration / 60)} minutes`;
+		routeTimeDisplays[id] = `Trip duration: ${Math.floor(data.duration / 60)} minutes`
 
-		duration.innerHTML = `<p><strong>Trip duration: ${Math.floor(data.duration / 60)} minutes`;
 	}
 
 	const bounds = [
@@ -205,6 +210,8 @@
 		// map.remove();
 	});
 
+	let timeDisplay = ``
+
 	async function markDestination(minuteGap: number) {
 		const zeroPad = (num, places) => String(num).padStart(places, '0')
 		inputNum = 0;
@@ -214,8 +221,9 @@
 		isoTimeString = newTime.toISOString().substring(0, isoTimeString.length - 8);
 		const hours = newTime.getHours();
 		const minutes = newTime.getMinutes();
-		const timeDisplay = document.getElementById('time-display')
-		timeDisplay.innerHTML = `<h2>${zeroPad(hours % 12, 2)}:${zeroPad(minutes, 2)}</h2>`
+		// const timeDisplay = document.getElementById('time-display')
+		// timeDisplay.innerHTML = `<h2>${zeroPad(hours % 12, 2)}:${zeroPad(minutes, 2)}</h2>`
+		timeDisplay = `${zeroPad(hours % 12, 2)}:${zeroPad(minutes, 2)}`
 		for (const [i, coords] of garageLocations.entries()) {
 			const end = {
 				type: 'FeatureCollection',
@@ -260,6 +268,7 @@
 			}
 			getRoute(coords, i, isoTimeString);
 		}
+		show = true;
 	}
 
 	let inputNum: number = 0;
@@ -279,29 +288,34 @@
 			throw new Error('Failed to fulfill POST request to callML from frontend');
 		}
 	}
-
-	let show = true;
+	let show = false;
 </script>
+
+<svelte:head>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+</svelte:head>
 
 <div class="nav-bar">
 	<h1 class="title">Parking Prediction Frontend *Demo*</h1>
-	<button on:click={()=>show=!show}>Test button</button>
+	<!-- <button on:click={()=>show=!show}>Test button</button> -->
 </div>
 <div class="big-container">
 	<div class="map-container">
 		{#if show}
-			<div class="arrival-menu">
+			<div class="arrival-menu" transition:fly={{ x: -200, duration: 500, easing: quintOut}}>
 					<h2>Parking capacities when leaving at</h2>
-					<div id="time-display"></div>
+					<h2>{timeDisplay}</h2>
 					<h3>Perry Street Garage:</h3>
-					<div id="garage0"></div>
+					<p><strong>{routeTimeDisplays[0]}</strong></p>
 					<h3>Kent Square Garage:</h3>
-					<div id="garage1"></div>
+					<p><strong>{routeTimeDisplays[1]}</strong></p>
 					<h3>North End Garage:</h3>
-					<div id="garage2"></div>
+					<p><strong>{routeTimeDisplays[2]}</strong></p>
 			</div>
         {/if}
-		<div class="map"  style={show ? "grid-column:3/6;" : "grid-column:2/5"} bind:this={mapContainer}>
+		<div class="map" bind:this={mapContainer}>
 		</div>
 	</div>
 	<div class="input-container">
@@ -344,6 +358,10 @@
 		height: 100vh;
 	}
 
+	* {
+		font-family: 'Roboto', sans-serif;
+	}
+
 	.nav-bar {
 		position: absolute;
 		top: 0;
@@ -376,9 +394,11 @@
 	}
 
 	.map-container {
-		display:grid;
-		grid-template-columns: repeat(5, 1fr);
-		/* grid-template-rows: minmax(100px, auto); */
+		/* display:grid;
+		grid-template-columns: repeat(5, 1fr); */
+		display:inline-flex;
+		justify-content:center;
+		/* align-items:center; */
 		height: 60vh;
 		width: 80vw;
 		border-radius: 5px;
@@ -389,6 +409,10 @@
 		/* align-items:center; */
 	}
 
+	.map-container > * {
+		/* transition: all 0.5s ease; */
+	}
+
 	.map {
 		/* height: 100%; */
 		/* width: 100%; */
@@ -397,14 +421,16 @@
 		/* grid-column-end:6; */
 		/* grid-column:3/6; */
 		height:80%;
+		width: 50vw;
 		align-self:center;
 	}
 
 	.arrival-menu {
 		/* background-color:aquamarine; */
-		grid-column:1/3;
+		/* grid-column:1/3; */
 		border-right: 2px solid darkgray;
 		text-align:center;
+		padding-right:10px;
 	}
 
 	.input-container {
