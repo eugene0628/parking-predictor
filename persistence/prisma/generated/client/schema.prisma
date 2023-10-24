@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model DATABASECHANGELOG {
+  ID            String   @db.VarChar(255)
+  AUTHOR        String   @db.VarChar(255)
+  FILENAME      String   @db.VarChar(255)
+  DATEEXECUTED  DateTime @db.DateTime(0)
+  ORDEREXECUTED Int
+  EXECTYPE      String   @db.VarChar(10)
+  MD5SUM        String?  @db.VarChar(35)
+  DESCRIPTION   String?  @db.VarChar(255)
+  COMMENTS      String?  @db.VarChar(255)
+  TAG           String?  @db.VarChar(255)
+  LIQUIBASE     String?  @db.VarChar(20)
+  CONTEXTS      String?  @db.VarChar(255)
+  LABELS        String?  @db.VarChar(255)
+  DEPLOYMENT_ID String?  @db.VarChar(10)
+
+  @@ignore
+}
+
+model DATABASECHANGELOGLOCK {
+  ID          Int       @id
+  LOCKED      Boolean   @db.Bit(1)
+  LOCKGRANTED DateTime? @db.DateTime(0)
+  LOCKEDBY    String?   @db.VarChar(255)
+}
+
+model SESSIONS {
+  UID               Int       @id @default(autoincrement())
+  createdAt         DateTime? @db.Timestamp(0)
+  USER              Int?
+  rec_garage        String?   @db.VarChar(255)
+  rec_avail_1       Int?
+  rec_travel_time_1 Int?
+  rec_avail_2       Int?
+  rec_travel_time_2 Int?
+  rec_avail_3       Int?
+  rec_travel_time_3 Int?
+  USERS             USERS?    @relation(fields: [USER], references: [UID], onDelete: NoAction, onUpdate: NoAction, map: "fk_USER")
+
+  @@index([USER], map: "fk_USER")
+}
+
+model USERS {
+  UID               Int        @id @default(autoincrement())
+  createdAt         DateTime?  @db.Timestamp(0)
+  name              String?    @db.VarChar(255)
+  username          String?    @db.VarChar(255)
+  password          String?    @db.VarChar(255)
+  parking_pass_type String?    @db.VarChar(255)
+  address           String?    @db.VarChar(255)
+  bio               String?    @db.Text
+  SESSIONS          SESSIONS[]
+}

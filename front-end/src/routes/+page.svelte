@@ -29,7 +29,7 @@
 		[-80.413885, 37.228099]
 	];
 
-    const routeColors = ["red", "green", "blue", "black"]
+  const routeColors = ["red", "green", "blue", "black"]
 	let routeTimeDisplays = ['', '', '']
 
 	// create a function to make a directions request
@@ -37,12 +37,13 @@
 		// make a directions request using cycling profile
 		// an arbitrary start will always be the same
 		// only the end or destination will change
-		let request = `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${end[0]},${end[1]}?steps=true&geometries=geojson&access_token=${accessToken}${timeString ? `&depart_at=${timeString}` : ''}`
+		let request = `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${
+			end[0]
+		},${end[1]}?steps=true&geometries=geojson&access_token=${accessToken}${
+			timeString ? `&depart_at=${timeString}` : ''
+		}`;
 		// console.log(request)
-		const query = await fetch(
-			request,
-			{ method: 'GET' }
-		);
+		const query = await fetch(request, { method: 'GET' });
 		// &depart_at=2019-05-02T15:00
 		const json = await query.json();
 		const data = json.routes[0];
@@ -93,6 +94,8 @@
 
 	onMount(() => {
 		const initialState = { lng: lng, lat: lat, zoom: zoom };
+		const accessToken =
+			'pk.eyJ1IjoiZXVnZW5lMDYyOCIsImEiOiJjbG5rcDR5NDIxcnpuMmtta2dwZTlxNXR0In0.gSkwpX1rNj13skXBncNGhg';
 		map = new Map({
 			container: mapContainer,
 			accessToken: accessToken,
@@ -146,6 +149,22 @@
 							'circle-color': '#3887be'
 						}
 					});
+				},
+				function (error) {
+					console.error('Error getting location:', error.message);
+				}
+			);
+		} else {
+			console.error('Geolocation is not supported by this browser');
+		}
+
+		if ('geolocation' in navigator) {
+			navigator.geolocation.getCurrentPosition(
+				function (position) {
+					userLat = position.coords.latitude;
+					userLng = position.coords.longitude;
+					// console.log(userLat);
+					// console.log(userLng);
 				},
 				function (error) {
 					console.error('Error getting location:', error.message);
@@ -213,11 +232,11 @@
 	let timeDisplay = ``
 
 	async function markDestination(minuteGap: number) {
-		const zeroPad = (num, places) => String(num).padStart(places, '0')
+		const zeroPad = (num, places) => String(num).padStart(places, '0');
 		inputNum = 0;
 		const newTime = new Date();
-		newTime.setMinutes(newTime.getMinutes() + minuteGap)
-		let isoTimeString = newTime.toISOString()
+		newTime.setMinutes(newTime.getMinutes() + minuteGap);
+		let isoTimeString = newTime.toISOString();
 		isoTimeString = newTime.toISOString().substring(0, isoTimeString.length - 8);
 		const hours = newTime.getHours();
 		const minutes = newTime.getMinutes();
@@ -319,10 +338,7 @@
 		</div>
 	</div>
 	<div class="input-container">
-		<button
-			class="action-button"
-			on:click={()=>markDestination(0)}>Leave now?</button
-		>
+		<button class="action-button" on:click={() => markDestination(0)}>Leave now?</button>
 		<div class="h-line">
 			<p class="or-word">or</p>
 		</div>
@@ -342,7 +358,7 @@
 					class="input-box"
 				/>
 			</div>
-			<button class="action-button" on:click={()=>markDestination(inputNum)}>Set</button>
+			<button class="action-button" on:click={() => markDestination(inputNum)}>Set</button>
 		</div>
 	</div>
 </div>
