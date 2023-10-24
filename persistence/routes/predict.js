@@ -37,7 +37,7 @@ async function createSessionDB(sessionData) {
 async function callModel(garageTimes) {
     try {
       const response = await axios.get('http://127.0.0.1:5000', {
-        params: { horizon: garageTimes.garage1 },
+        params: { garage1: garageTimes.garage1, garage2: garageTimes.garage2, garage3: garageTimes.garage3 },
       });
       return response.data;
     } catch (error) {

@@ -20,3 +20,6 @@ To Run Front End
 
 In front-end directory
 npm run dev
+
+Sample Flask Query
+http://127.0.0.1:5000/?garage1=10&garage2=10&garage3=7
