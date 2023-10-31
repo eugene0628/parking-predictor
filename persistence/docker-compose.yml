@@ -1,18 +1,18 @@
-version: '3.3'
+version: "3.3"
 services:
   db:
     image: mysql:8.0
     container_name: my-mysql-container
     restart: always
     environment:
-      MYSQL_DATABASE: 'mydb'
-      MYSQL_USER: 'myuser'
-      MYSQL_PASSWORD: 'mypassword'
-      MYSQL_ROOT_PASSWORD: 'myrootpassword'
+      MYSQL_DATABASE: "mydb"
+      MYSQL_USER: "myuser"
+      MYSQL_PASSWORD: "mypassword"
+      MYSQL_ROOT_PASSWORD: "myrootpassword"
     ports:
-      - '3306:3306'
+      - "3306:3306"
     expose:
-      - '3306'
+      - "3306"
     volumes:
       - my-db-data:/var/lib/mysql
     networks:
