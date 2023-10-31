@@ -3,6 +3,10 @@
 
 	// import "../node_modules/mapbox-gl/dist/mapbox-gl.css"
 	import { onMount, onDestroy } from 'svelte';
+	import { fly } from 'svelte/transition';
+	import { flip } from 'svelte/animate';
+	import { quintOut } from 'svelte/easing';
+	import { afterNavigate } from '$app/navigation';
 
 	let map: any;
 	let mapContainer: any;
@@ -27,6 +31,16 @@
 	];
 
 	const routeColors = ['red', 'green', 'blue', 'black'];
+	let routeTimeDisplays = ['', '', ''];
+	let dataPackage = { garage1: 0, garage2: 0, garage3: 0 };
+	let dataLoaded = false;
+
+	const background = (progress: number) => `radial-gradient(white 50%, transparent 51%),
+    conic-gradient(transparent 0deg ${360 * progress}deg, gainsboro ${360 * progress}deg 360deg),
+    conic-gradient(green 0deg, lightgreen 90deg, yellow 180deg, orange 270deg, red 345deg, orange 355deg, white 360deg);`;
+	$: garage1circle = `--background:${background((700 - capacities['garage1']) / 700)}`;
+	$: garage2circle = `--background:${background((600 - capacities['garage2']) / 600)}`;
+	$: garage3circle = `--background:${background((400 - capacities['garage3']) / 400)}`;
 
 	// create a function to make a directions request
 	async function getRoute(end: any, id: number, timeString?: string) {
@@ -53,8 +67,8 @@
 			}
 		};
 		// if the route already exists on the map, we'll reset it using setData
-		if (map.getSource('route')) {
-			map.getSource('route').setData(geojson);
+		if (map.getSource(`route${id}`)) {
+			map.getSource(`route${id}`).setData(geojson);
 		}
 		// otherwise, we'll make a new request
 		else {
@@ -77,9 +91,9 @@
 			});
 		}
 		// add turn instructions here at the end
-		const duration = document.getElementById(`garage${id}`);
-
-		duration.innerHTML = `<p><strong>Trip duration: ${Math.floor(data.duration / 60)} minutes`;
+		const minutes = Math.floor(data.duration / 60);
+		dataPackage[`garage${id + 1}`] = minutes + inputNum;
+		routeTimeDisplays[id] = `Trip duration: ${minutes} minutes`;
 	}
 
 	const bounds = [
@@ -87,10 +101,11 @@
 		[-80.250001, 37.181913]
 	];
 
+	let locationLoaded = false;
+
 	onMount(() => {
+		console.log('LOADING');
 		const initialState = { lng: lng, lat: lat, zoom: zoom };
-		const accessToken =
-			'pk.eyJ1IjoiZXVnZW5lMDYyOCIsImEiOiJjbG5rcDR5NDIxcnpuMmtta2dwZTlxNXR0In0.gSkwpX1rNj13skXBncNGhg';
 		map = new Map({
 			container: mapContainer,
 			accessToken: accessToken,
@@ -98,19 +113,6 @@
 			center: [initialState.lng, initialState.lat],
 			zoom: initialState.zoom
 		});
-		// map.setMaxBounds(bounds);
-		// Add geolocate control to the map.
-		// map.addControl(
-		// 	new GeolocateControl({
-		// 		positionOptions: {
-		// 			enableHighAccuracy: true
-		// 		},
-		// 		// When active the map will receive updates to the device's location as it changes.
-		// 		trackUserLocation: true,
-		// 		// Draw an arrow next to the location dot to indicate which direction the device is heading.
-		// 		showUserHeading: true
-		// 	})
-		// );
 
 		if ('geolocation' in navigator) {
 			navigator.geolocation.getCurrentPosition(
@@ -118,8 +120,6 @@
 					userLat = position.coords.latitude;
 					userLng = position.coords.longitude;
 					start = [userLng, userLat];
-					// console.log(userLat);
-					// console.log(userLng);
 					map.addLayer({
 						id: 'point',
 						type: 'circle',
@@ -144,22 +144,7 @@
 							'circle-color': '#3887be'
 						}
 					});
-				},
-				function (error) {
-					console.error('Error getting location:', error.message);
-				}
-			);
-		} else {
-			console.error('Geolocation is not supported by this browser');
-		}
-
-		if ('geolocation' in navigator) {
-			navigator.geolocation.getCurrentPosition(
-				function (position) {
-					userLat = position.coords.latitude;
-					userLng = position.coords.longitude;
-					// console.log(userLat);
-					// console.log(userLng);
+					locationLoaded = true;
 				},
 				function (error) {
 					console.error('Error getting location:', error.message);
@@ -195,28 +180,28 @@
 			});
 
 			// Add a new layer to visualize the polygon.
-			map.addLayer({
-				id: 'perry',
-				type: 'fill',
-				source: 'perry', // reference the data source
-				layout: {},
-				paint: {
-					'fill-color': '#0080ff', // blue color fill
-					'fill-opacity': 0.5
-				}
-			});
+			// map.addLayer({
+			// 	id: 'perry',
+			// 	type: 'fill',
+			// 	source: 'perry', // reference the data source
+			// 	layout: {},
+			// 	paint: {
+			// 		'fill-color': '#0080ff', // blue color fill
+			// 		'fill-opacity': 0.5
+			// 	}
+			// });
 			// Add a black outline around the polygon.
-			map.addLayer({
-				id: 'outline',
-				type: 'line',
-				source: 'perry',
-				layout: {},
-				paint: {
-					'line-color': '#000',
-					'line-width': 2
-				}
-			});
-			getRoute(start, 3);
+			// map.addLayer({
+			// 	id: 'outline',
+			// 	type: 'line',
+			// 	source: 'perry',
+			// 	layout: {},
+			// 	paint: {
+			// 		'line-color': '#000',
+			// 		'line-width': 2
+			// 	}
+			// });
+			// getRoute(start, 3);
 		});
 	});
 
@@ -224,17 +209,20 @@
 		// map.remove();
 	});
 
+	let timeDisplay = ``;
+
 	async function markDestination(minuteGap: number) {
 		const zeroPad = (num, places) => String(num).padStart(places, '0');
-		inputNum = 0;
+		// inputNum = 0;
 		const newTime = new Date();
 		newTime.setMinutes(newTime.getMinutes() + minuteGap);
 		let isoTimeString = newTime.toISOString();
 		isoTimeString = newTime.toISOString().substring(0, isoTimeString.length - 8);
 		const hours = newTime.getHours();
 		const minutes = newTime.getMinutes();
-		const timeDisplay = document.getElementById('time-display');
-		timeDisplay.innerHTML = `<h2>${zeroPad(hours % 12, 2)}:${zeroPad(minutes, 2)}</h2>`;
+		// const timeDisplay = document.getElementById('time-display')
+		// timeDisplay.innerHTML = `<h2>${zeroPad(hours % 12, 2)}:${zeroPad(minutes, 2)}</h2>`
+		timeDisplay = `${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}`;
 		for (const [i, coords] of garageLocations.entries()) {
 			const end = {
 				type: 'FeatureCollection',
@@ -277,12 +265,24 @@
 					}
 				});
 			}
-			getRoute(coords, i, isoTimeString);
+			await getRoute(coords, i, isoTimeString);
 		}
+		show = true;
+	}
+
+	let capacities = {};
+
+	async function runProcess(minuteGap: number) {
+		show = false;
+		dataLoaded = false;
+		await markDestination(minuteGap);
+		await sendRequest();
+		dataLoaded = true;
+		inputNum = 0;
 	}
 
 	let inputNum: number = 0;
-	let output: number;
+	let output: any = { garage1: '', garage2: '', garage3: '' };
 
 	async function sendRequest() {
 		const response = await fetch('/api/callML', {
@@ -290,44 +290,88 @@
 			headers: {
 				'Content-type': 'application/json'
 			},
-			body: JSON.stringify({ inputNum })
+			body: JSON.stringify(dataPackage)
 		});
 		if (response.ok) {
 			output = await response.json();
+			let i = 0;
+			for (const garage in output) {
+				if (i === 3) break;
+				// console.log(output[garage].expected_occupancy);
+				capacities[garage] = output[garage].expected_occupancy;
+				i++;
+			}
+			inputNum = 0;
 		} else {
-			throw new Error('Failed to fulfill POST request to callML from frontend');
+			throw new Error('Failed to fulfill POST request to callML Svelte API from frontend');
 		}
 	}
-
-	let show = true;
+	let show = false;
 </script>
+
+<svelte:head>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap"
+		rel="stylesheet"
+	/>
+</svelte:head>
 
 <div class="nav-bar">
 	<h1 class="title">Parking Prediction Frontend *Demo*</h1>
-	<button on:click={() => (show = !show)}>Test button</button>
 </div>
 <div class="big-container">
 	<div class="map-container">
 		{#if show}
-			<div class="arrival-menu">
-				<h2>Parking capacities when leaving at</h2>
-				<div id="time-display" />
-				<h3>Perry Street Garage:</h3>
-				<div id="garage0" />
-				<h3>Kent Square Garage:</h3>
-				<div id="garage1" />
-				<h3>North End Garage:</h3>
-				<div id="garage2" />
-			</div>
+			{#if dataLoaded}
+				<div class="arrival-menu" transition:fly={{ x: -200, duration: 500, easing: quintOut }}>
+					<h2>Parking capacities when leaving at</h2>
+					<h2>{timeDisplay}</h2>
+					{#key dataPackage}
+						<h3>Perry Street Garage:</h3>
+						<div class="route-time-wrapper">
+							<div>
+								<p>{capacities['garage1']} spots remaining</p>
+							</div>
+							<p>{routeTimeDisplays[0]}</p>
+						</div>
+						<!-- <p><strong>Spots remaining: {capacities['garage1']}</strong></p> -->
+						<h3>Kent Square Garage:</h3>
+						<div class="route-time-wrapper">
+							<div>
+								<p>{capacities['garage2']} spots remaining</p>
+							</div>
+							<p>{routeTimeDisplays[1]}</p>
+						</div>
+						<!-- <p><strong>Spots remaining: {capacities['garage2']}</strong></p> -->
+						<h3>North End Garage:</h3>
+						<div class="route-time-wrapper">
+							<div>
+								<p>{capacities['garage3']} spots remaining</p>
+							</div>
+							<p>{routeTimeDisplays[2]}</p>
+						</div>
+						<!-- <p><strong>Spots remaining: {capacities['garage3']}</strong></p> -->
+					{/key}
+				</div>
+			{:else}
+				<div class="loading-arrival-menu">
+					<div class="lds-ring">
+						<div />
+						<div />
+						<div />
+						<div />
+					</div>
+				</div>
+			{/if}
 		{/if}
-		<div
-			class="map"
-			style={show ? 'grid-column:3/6;' : 'grid-column:2/5'}
-			bind:this={mapContainer}
-		/>
+		<div class="map" bind:this={mapContainer} />
 	</div>
 	<div class="input-container">
-		<button class="action-button" on:click={() => markDestination(0)}>Leave now?</button>
+		<button class="action-button" disabled={!locationLoaded} on:click={() => runProcess(0)}
+			>Leave now?</button
+		>
 		<div class="h-line">
 			<p class="or-word">or</p>
 		</div>
@@ -347,7 +391,9 @@
 					class="input-box"
 				/>
 			</div>
-			<button class="action-button" on:click={() => markDestination(inputNum)}>Set</button>
+			<button class="action-button" disabled={!locationLoaded} on:click={() => runProcess(inputNum)}
+				>Set</button
+			>
 		</div>
 	</div>
 </div>
@@ -361,6 +407,10 @@
 		margin: 0;
 		padding: 0;
 		height: 100vh;
+	}
+
+	* {
+		font-family: 'Roboto', sans-serif;
 	}
 
 	.nav-bar {
@@ -395,9 +445,11 @@
 	}
 
 	.map-container {
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		/* grid-template-rows: minmax(100px, auto); */
+		/* display:grid;
+		grid-template-columns: repeat(5, 1fr); */
+		display: inline-flex;
+		justify-content: center;
+		/* align-items:center; */
 		height: 60vh;
 		width: 80vw;
 		border-radius: 5px;
@@ -408,6 +460,10 @@
 		/* align-items:center; */
 	}
 
+	.map-container > * {
+		/* transition: all 0.5s ease; */
+	}
+
 	.map {
 		/* height: 100%; */
 		/* width: 100%; */
@@ -416,14 +472,70 @@
 		/* grid-column-end:6; */
 		/* grid-column:3/6; */
 		height: 80%;
+		width: 50vw;
 		align-self: center;
 	}
 
 	.arrival-menu {
 		/* background-color:aquamarine; */
-		grid-column: 1/3;
+		/* grid-column:1/3; */
 		border-right: 2px solid darkgray;
 		text-align: center;
+		padding-right: 30px;
+	}
+
+	.loading-arrival-menu {
+		/* border-right: 2px solid darkgray; */
+		/* padding-right:10px; */
+		/* display:flex; */
+		/* align-items:center; */
+		z-index: 8000;
+		position: absolute;
+		top: 0;
+
+		background-color: rgba(0, 0, 0, 0.2);
+		width: 100vw;
+		height: 100vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 0;
+	}
+
+	.lds-ring {
+		display: inline-block;
+		position: relative;
+		width: 80px;
+		height: 80px;
+	}
+	.lds-ring div {
+		box-sizing: border-box;
+		display: block;
+		position: absolute;
+		width: 64px;
+		height: 64px;
+		margin: 8px;
+		border: 8px solid #fff;
+		border-radius: 50%;
+		animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+		border-color: #fff transparent transparent transparent;
+	}
+	.lds-ring div:nth-child(1) {
+		animation-delay: -0.45s;
+	}
+	.lds-ring div:nth-child(2) {
+		animation-delay: -0.3s;
+	}
+	.lds-ring div:nth-child(3) {
+		animation-delay: -0.15s;
+	}
+	@keyframes lds-ring {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 
 	.input-container {
@@ -468,5 +580,25 @@
 		background-color: white;
 		padding: 0 0.5rem;
 		color: gray;
+	}
+
+	#progress-circle {
+		background: var(--background);
+		border-radius: 50%;
+		width: 120px;
+		height: 120px;
+		transition: all 500ms ease-in;
+		will-change: transform;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: small;
+	}
+
+	.route-time-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 30px;
+		justify-content: flex-end;
 	}
 </style>
