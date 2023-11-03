@@ -105,8 +105,6 @@
 
 	onMount(() => {
 		const initialState = { lng: lng, lat: lat, zoom: zoom };
-		const accessToken =
-			'pk.eyJ1IjoiZXVnZW5lMDYyOCIsImEiOiJjbG5rcDR5NDIxcnpuMmtta2dwZTlxNXR0In0.gSkwpX1rNj13skXBncNGhg';
 		map = new Map({
 			container: mapContainer,
 			accessToken: accessToken,
@@ -121,31 +119,6 @@
 					userLat = position.coords.latitude;
 					userLng = position.coords.longitude;
 					start = [userLng, userLat];
-
-					map.addLayer({
-						id: 'outer-point',
-						type: 'circle',
-						source: {
-							type: 'geojson',
-							data: {
-								type: 'FeatureCollection',
-								features: [
-									{
-										type: 'Feature',
-										properties: {},
-										geometry: {
-											type: 'Point',
-											coordinates: start
-										}
-									}
-								]
-							}
-						},
-						paint: {
-							'circle-radius': 13,
-							'circle-color': 'rgba(50, 167, 250, 0.25)'
-						}
-					});
 					map.addLayer({
 						id: 'point',
 						type: 'circle',
@@ -166,32 +139,8 @@
 							}
 						},
 						paint: {
-							'circle-radius': 7,
-							'circle-color': '#ffffff'
-						}
-					});
-					map.addLayer({
-						id: 'inner-point',
-						type: 'circle',
-						source: {
-							type: 'geojson',
-							data: {
-								type: 'FeatureCollection',
-								features: [
-									{
-										type: 'Feature',
-										properties: {},
-										geometry: {
-											type: 'Point',
-											coordinates: start
-										}
-									}
-								]
-							}
-						},
-						paint: {
-							'circle-radius': 5,
-							'circle-color': '#32a7fa'
+							'circle-radius': 10,
+							'circle-color': '#3887be'
 						}
 					});
 					locationLoaded = true;
@@ -323,6 +272,7 @@
 	let capacities = {};
 
 	async function runProcess(minuteGap: number) {
+		// show = false;
 		dataLoaded = false;
 		await markDestination(minuteGap);
 		await sendRequest();
@@ -382,22 +332,9 @@
 	<div class="action-menu">
 		<label style="margin-bottom:5px;">Leaving in: </label>
 		<div class="user-input min">
-			<input
-				type="number"
-				min="0"
-				on:keyup={() => {
-					if (inputNum < 0) {
-						inputNum = 0;
-					}
-				}}
-				bind:value={inputNum}
-			/>
+			<input type="number" bind:value={inputNum} />
 		</div>
-		{#if locationLoaded}
-			<button on:click={() => runProcess(inputNum)} class="action-button">Predict</button>
-		{:else}
-			<button class="disabled-button">Loading location...</button>
-		{/if}
+		<button on:click={() => runProcess(0)} class="action-button">Predict</button>
 	</div>
 	<div class="map" bind:this={mapContainer} />
 	{#if show}
@@ -493,27 +430,27 @@
 		box-shadow: rgba(0, 0, 0, 0.5) -10px 10px 30px;
 	}
 
-	.results-results {
-		display: flex;
+    .results-results {
+        display: flex;
 		justify-content: flex-start;
 		align-items: center;
 		flex-direction: column;
 		overflow-y: auto;
-	}
+    }
 
-	.results-loading {
-		height: 100%;
-		display: flex;
+    .results-loading {
+        height:100%;
+        display: flex;
 		justify-content: center;
 		align-items: center;
 		flex-direction: column;
-	}
+    }
 
 	.result-divider {
 		width: 100%;
 		height: 1px;
 		background-color: black;
-		margin-top: 20px;
+        margin-top: 20px;
 	}
 
 	.route-time-wrapper {
@@ -525,49 +462,20 @@
 		transition: all 200ms ease;
 	}
 
-	.route-time-wrapper div {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
+    .route-time-wrapper div {
+        display: flex;
+        flex-direction:column;
+        align-items:center;
+    }
 
 	.action-button {
-		align-self: center;
-		justify-self: center;
-		grid-column: 3/3;
-		grid-row: 2/3;
-		height: 50px;
-		width: 207px;
-		margin-top: 5px;
+		border: none;
 		background-color: darkblue;
 		color: white;
-		border: none;
-		border-radius: 5px;
-		transition: all 100ms ease;
-		cursor: pointer;
-	}
-
-	.disabled-button {
-		align-self: center;
-		justify-self: center;
-		grid-column: 3/3;
-		grid-row: 2/3;
-		height: 50px;
-		width: 207px;
 		margin-top: 5px;
-		background-color: darkgray;
-		color: white;
-		border: none;
-		border-radius: 5px;
-	}
-
-	.action-button:hover {
-		transform: scale(1.05);
-		box-shadow: rgba(0, 0, 0, 0.2) 5px 5px 10px;
-	}
-
-	.action-button:active {
-		transform: scale(0.95);
+		width: 207px;
+		height: 50px;
+		cursor: pointer;
 	}
 
 	.user-input {
