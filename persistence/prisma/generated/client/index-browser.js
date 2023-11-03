@@ -131,6 +131,7 @@ exports.Prisma.USERSScalarFieldEnum = {
   UID: 'UID',
   createdAt: 'createdAt',
   name: 'name',
+  admin: 'admin',
   username: 'username',
   password: 'password',
   parking_pass_type: 'parking_pass_type',

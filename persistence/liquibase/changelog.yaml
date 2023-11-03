@@ -21,6 +21,9 @@ databaseChangeLog:
                               name: name
                               type: VARCHAR(255)
                         - column:
+                              name: admin
+                              type: BOOLEAN
+                        - column:
                               name: username
                               type: VARCHAR(255)
                         - column:

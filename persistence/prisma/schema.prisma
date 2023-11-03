@@ -55,6 +55,7 @@ model USERS {
   UID               Int        @id @default(autoincrement())
   createdAt         DateTime?  @db.Timestamp(0)
   name              String?    @db.VarChar(255)
+  admin             Boolean?   @db.Bit(1)
   username          String?    @db.VarChar(255)
   password          String?    @db.VarChar(255)
   parking_pass_type String?    @db.VarChar(255)

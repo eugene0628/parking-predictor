@@ -104,9 +104,8 @@
 	let locationLoaded = false;
 
 	onMount(() => {
+		console.log('LOADING');
 		const initialState = { lng: lng, lat: lat, zoom: zoom };
-		const accessToken =
-			'pk.eyJ1IjoiZXVnZW5lMDYyOCIsImEiOiJjbG5rcDR5NDIxcnpuMmtta2dwZTlxNXR0In0.gSkwpX1rNj13skXBncNGhg';
 		map = new Map({
 			container: mapContainer,
 			accessToken: accessToken,
@@ -121,7 +120,6 @@
 					userLat = position.coords.latitude;
 					userLng = position.coords.longitude;
 					start = [userLng, userLat];
-
 					map.addLayer({
 						id: 'outer-point',
 						type: 'circle',
@@ -653,5 +651,25 @@
 		100% {
 			transform: rotate(360deg);
 		}
+	}
+
+	#progress-circle {
+		background: var(--background);
+		border-radius: 50%;
+		width: 120px;
+		height: 120px;
+		transition: all 500ms ease-in;
+		will-change: transform;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: small;
+	}
+
+	.route-time-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 30px;
+		justify-content: flex-end;
 	}
 </style>

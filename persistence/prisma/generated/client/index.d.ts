@@ -3021,6 +3021,7 @@ export namespace Prisma {
     UID: number | null
     createdAt: Date | null
     name: string | null
+    admin: boolean | null
     username: string | null
     password: string | null
     parking_pass_type: string | null
@@ -3032,6 +3033,7 @@ export namespace Prisma {
     UID: number | null
     createdAt: Date | null
     name: string | null
+    admin: boolean | null
     username: string | null
     password: string | null
     parking_pass_type: string | null
@@ -3043,6 +3045,7 @@ export namespace Prisma {
     UID: number
     createdAt: number
     name: number
+    admin: number
     username: number
     password: number
     parking_pass_type: number
@@ -3064,6 +3067,7 @@ export namespace Prisma {
     UID?: true
     createdAt?: true
     name?: true
+    admin?: true
     username?: true
     password?: true
     parking_pass_type?: true
@@ -3075,6 +3079,7 @@ export namespace Prisma {
     UID?: true
     createdAt?: true
     name?: true
+    admin?: true
     username?: true
     password?: true
     parking_pass_type?: true
@@ -3086,6 +3091,7 @@ export namespace Prisma {
     UID?: true
     createdAt?: true
     name?: true
+    admin?: true
     username?: true
     password?: true
     parking_pass_type?: true
@@ -3184,6 +3190,7 @@ export namespace Prisma {
     UID: number
     createdAt: Date | null
     name: string | null
+    admin: boolean | null
     username: string | null
     password: string | null
     parking_pass_type: string | null
@@ -3214,6 +3221,7 @@ export namespace Prisma {
     UID?: boolean
     createdAt?: boolean
     name?: boolean
+    admin?: boolean
     username?: boolean
     password?: boolean
     parking_pass_type?: boolean
@@ -3227,6 +3235,7 @@ export namespace Prisma {
     UID?: boolean
     createdAt?: boolean
     name?: boolean
+    admin?: boolean
     username?: boolean
     password?: boolean
     parking_pass_type?: boolean
@@ -3249,6 +3258,7 @@ export namespace Prisma {
       UID: number
       createdAt: Date | null
       name: string | null
+      admin: boolean | null
       username: string | null
       password: string | null
       parking_pass_type: string | null
@@ -3652,6 +3662,7 @@ export namespace Prisma {
     readonly UID: FieldRef<"USERS", 'Int'>
     readonly createdAt: FieldRef<"USERS", 'DateTime'>
     readonly name: FieldRef<"USERS", 'String'>
+    readonly admin: FieldRef<"USERS", 'Boolean'>
     readonly username: FieldRef<"USERS", 'String'>
     readonly password: FieldRef<"USERS", 'String'>
     readonly parking_pass_type: FieldRef<"USERS", 'String'>
@@ -4049,6 +4060,7 @@ export namespace Prisma {
     UID: 'UID',
     createdAt: 'createdAt',
     name: 'name',
+    admin: 'admin',
     username: 'username',
     password: 'password',
     parking_pass_type: 'parking_pass_type',
@@ -4256,6 +4268,7 @@ export namespace Prisma {
     UID?: IntFilter<"USERS"> | number
     createdAt?: DateTimeNullableFilter<"USERS"> | Date | string | null
     name?: StringNullableFilter<"USERS"> | string | null
+    admin?: BoolNullableFilter<"USERS"> | boolean | null
     username?: StringNullableFilter<"USERS"> | string | null
     password?: StringNullableFilter<"USERS"> | string | null
     parking_pass_type?: StringNullableFilter<"USERS"> | string | null
@@ -4268,6 +4281,7 @@ export namespace Prisma {
     UID?: SortOrder
     createdAt?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
+    admin?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     password?: SortOrderInput | SortOrder
     parking_pass_type?: SortOrderInput | SortOrder
@@ -4283,6 +4297,7 @@ export namespace Prisma {
     NOT?: USERSWhereInput | USERSWhereInput[]
     createdAt?: DateTimeNullableFilter<"USERS"> | Date | string | null
     name?: StringNullableFilter<"USERS"> | string | null
+    admin?: BoolNullableFilter<"USERS"> | boolean | null
     username?: StringNullableFilter<"USERS"> | string | null
     password?: StringNullableFilter<"USERS"> | string | null
     parking_pass_type?: StringNullableFilter<"USERS"> | string | null
@@ -4295,6 +4310,7 @@ export namespace Prisma {
     UID?: SortOrder
     createdAt?: SortOrderInput | SortOrder
     name?: SortOrderInput | SortOrder
+    admin?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
     password?: SortOrderInput | SortOrder
     parking_pass_type?: SortOrderInput | SortOrder
@@ -4314,6 +4330,7 @@ export namespace Prisma {
     UID?: IntWithAggregatesFilter<"USERS"> | number
     createdAt?: DateTimeNullableWithAggregatesFilter<"USERS"> | Date | string | null
     name?: StringNullableWithAggregatesFilter<"USERS"> | string | null
+    admin?: BoolNullableWithAggregatesFilter<"USERS"> | boolean | null
     username?: StringNullableWithAggregatesFilter<"USERS"> | string | null
     password?: StringNullableWithAggregatesFilter<"USERS"> | string | null
     parking_pass_type?: StringNullableWithAggregatesFilter<"USERS"> | string | null
@@ -4460,6 +4477,7 @@ export namespace Prisma {
   export type USERSCreateInput = {
     createdAt?: Date | string | null
     name?: string | null
+    admin?: boolean | null
     username?: string | null
     password?: string | null
     parking_pass_type?: string | null
@@ -4472,6 +4490,7 @@ export namespace Prisma {
     UID?: number
     createdAt?: Date | string | null
     name?: string | null
+    admin?: boolean | null
     username?: string | null
     password?: string | null
     parking_pass_type?: string | null
@@ -4483,6 +4502,7 @@ export namespace Prisma {
   export type USERSUpdateInput = {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    admin?: NullableBoolFieldUpdateOperationsInput | boolean | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
@@ -4495,6 +4515,7 @@ export namespace Prisma {
     UID?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    admin?: NullableBoolFieldUpdateOperationsInput | boolean | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
@@ -4507,6 +4528,7 @@ export namespace Prisma {
     UID?: number
     createdAt?: Date | string | null
     name?: string | null
+    admin?: boolean | null
     username?: string | null
     password?: string | null
     parking_pass_type?: string | null
@@ -4517,6 +4539,7 @@ export namespace Prisma {
   export type USERSUpdateManyMutationInput = {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    admin?: NullableBoolFieldUpdateOperationsInput | boolean | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
@@ -4528,6 +4551,7 @@ export namespace Prisma {
     UID?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    admin?: NullableBoolFieldUpdateOperationsInput | boolean | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
@@ -4758,6 +4782,11 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type BoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
   export type SESSIONSListRelationFilter = {
     every?: SESSIONSWhereInput
     some?: SESSIONSWhereInput
@@ -4772,6 +4801,7 @@ export namespace Prisma {
     UID?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    admin?: SortOrder
     username?: SortOrder
     password?: SortOrder
     parking_pass_type?: SortOrder
@@ -4787,6 +4817,7 @@ export namespace Prisma {
     UID?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    admin?: SortOrder
     username?: SortOrder
     password?: SortOrder
     parking_pass_type?: SortOrder
@@ -4798,6 +4829,7 @@ export namespace Prisma {
     UID?: SortOrder
     createdAt?: SortOrder
     name?: SortOrder
+    admin?: SortOrder
     username?: SortOrder
     password?: SortOrder
     parking_pass_type?: SortOrder
@@ -4807,6 +4839,14 @@ export namespace Prisma {
 
   export type USERSSumOrderByAggregateInput = {
     UID?: SortOrder
+  }
+
+  export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -4865,6 +4905,10 @@ export namespace Prisma {
     connectOrCreate?: SESSIONSCreateOrConnectWithoutUSERSInput | SESSIONSCreateOrConnectWithoutUSERSInput[]
     createMany?: SESSIONSCreateManyUSERSInputEnvelope
     connect?: SESSIONSWhereUniqueInput | SESSIONSWhereUniqueInput[]
+  }
+
+  export type NullableBoolFieldUpdateOperationsInput = {
+    set?: boolean | null
   }
 
   export type SESSIONSUpdateManyWithoutUSERSNestedInput = {
@@ -5040,9 +5084,23 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedBoolNullableFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
+    not?: NestedBoolNullableWithAggregatesFilter<$PrismaModel> | boolean | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedBoolNullableFilter<$PrismaModel>
+    _max?: NestedBoolNullableFilter<$PrismaModel>
+  }
+
   export type USERSCreateWithoutSESSIONSInput = {
     createdAt?: Date | string | null
     name?: string | null
+    admin?: boolean | null
     username?: string | null
     password?: string | null
     parking_pass_type?: string | null
@@ -5054,6 +5112,7 @@ export namespace Prisma {
     UID?: number
     createdAt?: Date | string | null
     name?: string | null
+    admin?: boolean | null
     username?: string | null
     password?: string | null
     parking_pass_type?: string | null
@@ -5080,6 +5139,7 @@ export namespace Prisma {
   export type USERSUpdateWithoutSESSIONSInput = {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    admin?: NullableBoolFieldUpdateOperationsInput | boolean | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
@@ -5091,6 +5151,7 @@ export namespace Prisma {
     UID?: IntFieldUpdateOperationsInput | number
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    admin?: NullableBoolFieldUpdateOperationsInput | boolean | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
     password?: NullableStringFieldUpdateOperationsInput | string | null
     parking_pass_type?: NullableStringFieldUpdateOperationsInput | string | null
