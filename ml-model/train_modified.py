@@ -14,18 +14,34 @@ def load_and_preprocess_data(filepath, unique_id, column_name):
     data = data.rename(columns={'ts': 'ds', column_name: 'y'})
     return data
 
-def create_sliding_window(df, past_points=3, future_points=2, target_col='y'):
-    n = len(df)
-    cols = [target_col + f"_{i}" for i in range(-past_points, future_points)]
-    sliding_window_df = pd.DataFrame(columns=cols)
+
+def create_sliding_window(df, past_points=5, future_points=6, target_col='y'):
+    # Convert the timestamp column to datetime and sort the DataFrame
+    df['ts'] = pd.to_datetime(df['ts'])
+    df = df.sort_values('ts').reset_index(drop=True)
     
-    for i in range(past_points, n - future_points + 1):
-        window_data = df[target_col].iloc[i-past_points:i+future_points].values
-        sliding_window_df.loc[i] = window_data
-
+    # Create a new column that rounds the datetime to the nearest 5 minutes to facilitate 5-minute interval windows
+    df['ts_rounded'] = df['ts'].dt.round('5min')
+    
+    # Create a list to store the new future column names
+    future_cols = [f"{target_col}_future_{i*5}min" for i in range(1, future_points + 1)]
+    
+    # Initialize a dictionary to hold the sliding window data
+    sliding_window_data = {col: [] for col in future_cols}
+    
+    # Iterate over the DataFrame to create sliding windows
+    for i in range(past_points, len(df) - future_points*5, 5):
+        # For each point in the future, find the corresponding value at 5-minute intervals
+        for j, col in enumerate(future_cols, start=1):
+            future_ts = df.loc[i, 'ts_rounded'] + pd.Timedelta(minutes=j*5)
+            future_val = df.loc[df['ts_rounded'] == future_ts, target_col].values[0]
+            sliding_window_data[col].append(future_val)
+            
+    # Convert the dictionary to a DataFrame
+    sliding_window_df = pd.DataFrame(sliding_window_data)
+    
     return sliding_window_df
-
-def generate_features_labels(df, past_points=3, future_points=2):
+def generate_features_labels(df, past_points=5, future_points=6):
     feature_cols = [col for col in df.columns if int(col.split("_")[-1]) < 0]
     label_cols = [col for col in df.columns if int(col.split("_")[-1]) >= 0]
     
@@ -43,7 +59,7 @@ def train_predictive_model(X, y):
     print(f"Mean Squared Error: {mse}")
     return model
 
-def main_pipeline(filepath, unique_id, column_name, past_points=3, future_points=2):
+def main_pipeline(filepath, unique_id, column_name, past_points=5, future_points=6):
     data = load_and_preprocess_data(filepath, unique_id, column_name)
     sliding_window_df = create_sliding_window(data, past_points, future_points, "y")
     X, y = generate_features_labels(sliding_window_df, past_points, future_points)
