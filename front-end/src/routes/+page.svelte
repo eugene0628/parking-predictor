@@ -7,6 +7,7 @@
 	import { flip } from 'svelte/animate';
 	import { quintOut } from 'svelte/easing';
 	import { afterNavigate } from '$app/navigation';
+	import mapboxgl from 'mapbox-gl';
 
 	let map: any;
 	let mapContainer: any;
@@ -14,6 +15,7 @@
 	const accessToken =
 		'pk.eyJ1IjoiZXVnZW5lMDYyOCIsImEiOiJjbG5rcDR5NDIxcnpuMmtta2dwZTlxNXR0In0.gSkwpX1rNj13skXBncNGhg';
 
+	let routeInterval: any;
 	// bounds: 37.274843, -80.588467 | 37.181913, -80.250001
 	// 37.231123, -80.426337
 	lng = -80.426337;
@@ -24,11 +26,13 @@
 	let userLat = lat;
 	let start = [lng, lat];
 
-	const garageLocations = [
+	const garageLocations: mapboxgl.LngLatLike[] = [
 		[-80.42633819580078, 37.23112106323242],
 		[-80.42050170898438, 37.233638763427734],
 		[-80.413885, 37.228099]
 	];
+
+	let markers = {};
 
 	const routeColors = ['red', 'green', 'blue', 'black'];
 	let routeTimeDisplays = ['', '', ''];
@@ -43,7 +47,7 @@
 	$: garage3circle = `--background:${background((400 - capacities['garage3']) / 400)}`;
 
 	// create a function to make a directions request
-	async function getRoute(end: any, id: number, timeString?: string) {
+	async function getRoute(end: any, id: number, timeString?: string, draw: boolean = false) {
 		// make a directions request using cycling profile
 		// an arbitrary start will always be the same
 		// only the end or destination will change
@@ -57,44 +61,61 @@
 		// &depart_at=2019-05-02T15:00
 		const json = await query.json();
 		const data = json.routes[0];
-		const route = data.geometry.coordinates;
-		const geojson = {
-			type: 'Feature',
-			properties: {},
-			geometry: {
-				type: 'LineString',
-				coordinates: route
-			}
-		};
-		// if the route already exists on the map, we'll reset it using setData
-		if (map.getSource(`route${id}`)) {
-			map.getSource(`route${id}`).setData(geojson);
-		}
-		// otherwise, we'll make a new request
-		else {
-			map.addLayer({
-				id: `route${id}`,
-				type: 'line',
-				source: {
-					type: 'geojson',
-					data: geojson
-				},
-				layout: {
-					'line-join': 'round',
-					'line-cap': 'round'
-				},
-				paint: {
-					'line-color': routeColors[id],
-					'line-width': 5,
-					'line-opacity': 0.75
+		if (draw) {
+			const route = data.geometry.coordinates;
+			const geojson = {
+				type: 'Feature',
+				properties: {},
+				geometry: {
+					type: 'LineString',
+					coordinates: route
 				}
-			});
+			};
+			// if the route already exists on the map, we'll reset it using setData
+			if (map.getSource(`route${id}`)) {
+				map.getSource(`route${id}`).setData(geojson);
+			}
+			// otherwise, we'll make a new request
+			else {
+				map.addLayer({
+					id: `route${id}`,
+					type: 'line',
+					source: {
+						type: 'geojson',
+						data: geojson
+					},
+					layout: {
+						'line-join': 'round',
+						'line-cap': 'round'
+					},
+					paint: {
+						'line-color': routeColors[id],
+						'line-width': 5,
+						'line-opacity': 0.75
+					}
+				});
+			}
 		}
 		// add turn instructions here at the end
 		const minutes = Math.floor(data.duration / 60);
 		dataPackage[`garage${id + 1}`] = minutes + inputNum;
 		routeTimeDisplays[id] = `Trip duration: ${minutes} minutes`;
+		console.log(dataPackage);
+
+		//update markers
+		let y = 1;
+		for (const marker in markers) {
+
+			theMarker = markers[marker]
+			theMarker.setPopup(new mapboxgl.Popup().setHTML(`<h2>Capacity: ${capacities[`garage${y}`]}</h2>`))
+			y++;
+		}
 	}
+
+	// Call  this only after the route has been gotten
+	// function drawRoute(id: number, geojson: any) {
+
+	// }
 
 	const bounds = [
 		[-80.588467, 37.274843],
@@ -113,6 +134,25 @@
 			center: [initialState.lng, initialState.lat],
 			zoom: initialState.zoom
 		});
+
+		// Calls getRoute every 5 seconds, change to higher interval later.
+		routeInterval = setInterval(() => {
+			for (const [i, coords] of garageLocations.entries()) {
+				getRoute(coords, i);
+			}
+		}, 5000);
+
+		markers = {
+			marker1: new mapboxgl.Marker({
+				color: '#FFFFFF'
+			}).setLngLat(garageLocations[0]).addTo(map),
+			marker2: new mapboxgl.Marker({
+				color: '#FFFFFF'
+			}).setLngLat(garageLocations[1]).addTo(map),
+			marker3: new mapboxgl.Marker({
+				color: '#FFFFFF'
+			}).setLngLat(garageLocations[2]).addTo(map)
+		};
 
 		if ('geolocation' in navigator) {
 			navigator.geolocation.getCurrentPosition(
@@ -202,59 +242,128 @@
 			console.error('Geolocation is not supported by this browser');
 		}
 
-		// 37.231264,-80.427086
-		// 37.231862,-80.426323
-		// 37.231144,-80.425475
-		// 37.230563,-80.426232
 		map.on('load', () => {
 			// Add a data source containing GeoJSON data.
 			map.addSource('perry', {
 				type: 'geojson',
 				data: {
-					type: 'Feature',
-					geometry: {
-						type: 'Polygon',
-						// These coordinates outline Maine.
-						coordinates: [
-							[
-								[-80.427086, 37.231264],
-								[-80.426323, 37.231862],
-								[-80.425475, 37.231144],
-								[-80.426232, 37.230563]
-							]
-						]
-					}
+					type: 'FeatureCollection',
+					features: [
+						{
+							type: 'Feature',
+							properties: {},
+							geometry: {
+								coordinates: [
+									[-80.42708200802527, 37.23127557377347],
+									[-80.42704026614749, 37.23130774085311],
+									[-80.42699081291872, 37.23126930052352],
+									[-80.42631863068358, 37.2317860345929],
+									[-80.42636489878932, 37.23182313993475],
+									[-80.42631889531432, 37.23185747734773],
+									[-80.4254673992555, 37.23114848460352],
+									[-80.4255064589239, 37.231117785666484],
+									[-80.42555842672388, 37.231158895544866],
+									[-80.42623552380041, 37.230645577036086],
+									[-80.4261783592207, 37.23059752620007],
+									[-80.42619821463288, 37.230584697025876],
+									[-80.42622788656995, 37.23056307413543],
+									[-80.4270819179505, 37.2312754959013]
+								],
+								type: 'LineString'
+							}
+						}
+					]
+				}
+			});
+
+			map.addSource('northend', {
+				type: 'geojson',
+				data: {
+					type: 'FeatureCollection',
+					features: [
+						{
+							type: 'Feature',
+							properties: {},
+							geometry: {
+								coordinates: [
+									[-80.42099027118148, 37.23382858875186],
+									[-80.42064192537737, 37.23406896455522],
+									[-80.41998863442235, 37.233466108463034],
+									[-80.42018117720595, 37.233333391964564],
+									[-80.42025427215154, 37.23327590506655],
+									[-80.42030419065095, 37.23324751645896],
+									[-80.4204976248357, 37.23343417135891],
+									[-80.42060905005792, 37.2335342409059],
+									[-80.42099056726184, 37.233828060399446]
+								],
+								type: 'LineString'
+							}
+						}
+					]
+				}
+			});
+
+			map.addSource('kentsquare', {
+				type: 'geojson',
+				data: {
+					type: 'FeatureCollection',
+					features: [
+						{
+							type: 'Feature',
+							properties: {},
+							geometry: {
+								coordinates: [
+									[-80.41340510410497, 37.22769580816032],
+									[-80.41290642636295, 37.22803472181779],
+									[-80.41317915858284, 37.22829549348738],
+									[-80.41363561418221, 37.22798293082137],
+									[-80.41359795659544, 37.2279502206996],
+									[-80.41363903759914, 37.22792114502434],
+									[-80.41353012839862, 37.22780840069234],
+									[-80.41352878729415, 37.22780933504961],
+									[-80.41340800040628, 37.22769342062058],
+									[-80.41340479098554, 37.22769567544012]
+								],
+								type: 'LineString'
+							}
+						}
+					]
 				}
 			});
 
 			// Add a new layer to visualize the polygon.
-			// map.addLayer({
-			// 	id: 'perry',
-			// 	type: 'fill',
-			// 	source: 'perry', // reference the data source
-			// 	layout: {},
-			// 	paint: {
-			// 		'fill-color': '#0080ff', // blue color fill
-			// 		'fill-opacity': 0.5
-			// 	}
-			// });
-			// Add a black outline around the polygon.
-			// map.addLayer({
-			// 	id: 'outline',
-			// 	type: 'line',
-			// 	source: 'perry',
-			// 	layout: {},
-			// 	paint: {
-			// 		'line-color': '#000',
-			// 		'line-width': 2
-			// 	}
-			// });
-			// getRoute(start, 3);
+
+			for (const key in { perry: '', northend: '', kentsquare: '' }) {
+				console.log();
+				map.addLayer({
+					id: key,
+					type: 'fill',
+					source: key, // reference the data source
+					layout: {},
+					paint: {
+						'fill-color': '#0080ff', // blue color fill
+						'fill-opacity': 0.5
+					}
+				});
+				// Add a black outline around the polygon.
+				map.addLayer({
+					id: `outline_${key}`,
+					type: 'line',
+					source: key,
+					layout: {},
+					paint: {
+						'line-color': '#000',
+						'line-width': 2
+					}
+				});
+			}
 		});
 	});
 
 	onDestroy(() => {
 		// map.remove();
+		// be sure to clear interval here!!!
+		clearInterval(routeInterval);
 	});
 
 	let timeDisplay = ``;
@@ -272,48 +381,11 @@
 		// timeDisplay.innerHTML = `<h2>${zeroPad(hours % 12, 2)}:${zeroPad(minutes, 2)}</h2>`
 		timeDisplay = `${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}`;
 		for (const [i, coords] of garageLocations.entries()) {
-			const end = {
-				type: 'FeatureCollection',
-				features: [
-					{
-						type: 'Feature',
-						properties: {},
-						geometry: {
-							type: 'Point',
-							coordinates: coords
-						}
-					}
-				]
-			};
-			if (map.getLayer(`end${i}`)) {
-				map.getSource(`end${i}`).setData(end);
-			} else {
-				map.addLayer({
-					id: `end${i}`,
-					type: 'circle',
-					source: {
-						type: 'geojson',
-						data: {
-							type: 'FeatureCollection',
-							features: [
-								{
-									type: 'Feature',
-									properties: {},
-									geometry: {
-										type: 'Point',
-										coordinates: coords
-									}
-								}
-							]
-						}
-					},
-					paint: {
-						'circle-radius': 10,
-						'circle-color': '#f30'
-					}
-				});
-			}
-			await getRoute(coords, i, isoTimeString);
+			// if (!show) {
+			// 	// const marker1 = new mapboxgl.Marker().setLngLat(coords).addTo(map);
+			// 	markers[`marker${i + 1}`].addTo(map);
+			// }
+			await getRoute(coords, i, isoTimeString, true);
 		}
 		show = true;
 	}
@@ -368,14 +440,6 @@
 	}
 </script>
 
-<svelte:head>
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap"
-		rel="stylesheet"
-	/>
-</svelte:head>
 <div class="big-container">
 	<div class="action-menu">
 		<label style="margin-bottom:5px;">Leaving in: </label>
@@ -532,8 +596,6 @@
 	.action-button {
 		align-self: center;
 		justify-self: center;
-		grid-column: 3/3;
-		grid-row: 2/3;
 		height: 50px;
 		width: 207px;
 		margin-top: 5px;
@@ -548,8 +610,6 @@
 	.disabled-button {
 		align-self: center;
 		justify-self: center;
-		grid-column: 3/3;
-		grid-row: 2/3;
 		height: 50px;
 		width: 207px;
 		margin-top: 5px;

@@ -12,11 +12,27 @@
 	}
 </script>
 
+<svelte:head>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,300;1,400;1,500;1,700;1,900&display=swap"
+		rel="stylesheet"
+	/>
+</svelte:head>
+
 <div class="nav-bar">
 	<a href="/">
 		<h1 class="title">Parking Prediction Frontend</h1>
 	</a>
-	<div on:click|stopPropagation={menuShow ? handleMenuClose : handleMenuOpen} class="profile" />
+	<div class="nav-button-container">
+		<a class="nav-button admin-button" href="/admin">Admin panel</a>
+		<button on:click|stopPropagation={menuShow ? handleMenuClose : handleMenuOpen} class="nav-button profile-wrapper">
+			<div class="profile" />
+			Profile<div class={menuShow ? "material-icons arrow-up" : "material-icons"}>expand_more</div>
+		</button>
+	</div>
 </div>
 {#if menuShow}
 	<div class="dropdown">
@@ -49,16 +65,41 @@
 		position: absolute;
 		top: 0;
 		width: 100vw;
-		top: 0;
 		right: 0;
+		left:0;
 		background-color: darkblue;
 		height: 100px;
 		z-index: 2;
 		display: flex;
-		/* align-items:flex-start; */
 		justify-content: space-between;
 		align-items: center;
-        /* box-shadow: rgba(0, 0, 0, 0.5) 10px 10px 30px; */
+	}
+
+	.nav-button-container {
+		display:inline-flex;
+		align-items: center;
+		gap:10px;
+	}
+
+	.nav-button {
+		border: solid 1px white;
+		padding: 5px 20px;
+		height:70px;
+		border-radius:5px;
+		color:white;
+		background-color:rgba(0,0,0,0);
+		display:inline-flex;
+		align-items:center;
+		transition:all 100ms ease;
+		cursor:pointer;
+	}
+
+	.nav-button:hover {
+		transform: scale(1.05);
+	}
+
+	.nav-button:active {
+		transform: scale(0.95);
 	}
 
 	.dropdown {
@@ -107,17 +148,39 @@
 		color: white;
 	}
 
+	.profile-wrapper {
+		margin-right:10px;
+	}
+
 	.profile {
-		width: 75px;
-		height: 75px;
+		width: 55px;
+		height: 55px;
 		/* background-color:white; */
 		border-radius: 50%;
-		margin-right: 50px;
 		/* padding-bottom:100%; */
+		margin-right:20px;
 		background-image: url('/Farag_Mohamed.jpg');
 		background-repeat: no-repeat;
 		background-size: cover;
 		background-position: center center;
-		cursor: pointer;
+	}
+
+	.profile-wrapper .material-icons {
+		transition: all 150ms ease;
+	}
+
+	/* .profile-wrapper:hover .material-icons {
+		transform: translate(0, 12%);
+	} */
+
+	.arrow-up {
+		transform: rotate(180deg);
+	}
+
+	.admin-button {
+		background-color:darkred;
+		padding:0 20px;
+		font-size:small;
+		text-decoration:none;
 	}
 </style>
