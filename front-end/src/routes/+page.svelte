@@ -16,6 +16,7 @@
 		'pk.eyJ1IjoiZXVnZW5lMDYyOCIsImEiOiJjbG5rcDR5NDIxcnpuMmtta2dwZTlxNXR0In0.gSkwpX1rNj13skXBncNGhg';
 
 	let routeInterval: any;
+	let mlInterval: any;
 	// bounds: 37.274843, -80.588467 | 37.181913, -80.250001
 	// 37.231123, -80.426337
 	lng = -80.426337;
@@ -100,16 +101,6 @@
 		const minutes = Math.floor(data.duration / 60);
 		dataPackage[`garage${id + 1}`] = minutes + inputNum;
 		routeTimeDisplays[id] = `Trip duration: ${minutes} minutes`;
-		console.log(dataPackage);
-
-		//update markers
-		let y = 1;
-		for (const marker in markers) {
-
-			theMarker = markers[marker]
-			theMarker.setPopup(new mapboxgl.Popup().setHTML(`<h2>Capacity: ${capacities[`garage${y}`]}</h2>`))
-			y++;
-		}
 	}
 
 	// Call  this only after the route has been gotten
@@ -124,6 +115,15 @@
 
 	let locationLoaded = false;
 
+	async function startIntervalML(delayMS: number = 5000) {
+		for (const [i, coords] of garageLocations.entries()) {
+			getRoute(coords, i);
+		}
+		mlInterval = setInterval(() => {
+			sendRequest();
+		}, delayMS);
+	}
+
 	onMount(() => {
 		console.log('LOADING');
 		const initialState = { lng: lng, lat: lat, zoom: zoom };
@@ -135,23 +135,24 @@
 			zoom: initialState.zoom
 		});
 
-		// Calls getRoute every 5 seconds, change to higher interval later.
-		routeInterval = setInterval(() => {
-			for (const [i, coords] of garageLocations.entries()) {
-				getRoute(coords, i);
-			}
-		}, 5000);
+		startIntervalML();
 
 		markers = {
 			marker1: new mapboxgl.Marker({
 				color: '#FFFFFF'
-			}).setLngLat(garageLocations[0]).addTo(map),
+			})
+				.setLngLat(garageLocations[0])
+				.addTo(map),
 			marker2: new mapboxgl.Marker({
 				color: '#FFFFFF'
-			}).setLngLat(garageLocations[1]).addTo(map),
+			})
+				.setLngLat(garageLocations[1])
+				.addTo(map),
 			marker3: new mapboxgl.Marker({
 				color: '#FFFFFF'
-			}).setLngLat(garageLocations[2]).addTo(map)
+			})
+				.setLngLat(garageLocations[2])
+				.addTo(map)
 		};
 
 		if ('geolocation' in navigator) {
@@ -363,6 +364,7 @@
 	onDestroy(() => {
 		// map.remove();
 		// be sure to clear interval here!!!
+		clearInterval(mlInterval);
 		clearInterval(routeInterval);
 	});
 
@@ -370,15 +372,12 @@
 
 	async function markDestination(minuteGap: number) {
 		const zeroPad = (num, places) => String(num).padStart(places, '0');
-		// inputNum = 0;
 		const newTime = new Date();
 		newTime.setMinutes(newTime.getMinutes() + minuteGap);
 		let isoTimeString = newTime.toISOString();
 		isoTimeString = newTime.toISOString().substring(0, isoTimeString.length - 8);
 		const hours = newTime.getHours();
 		const minutes = newTime.getMinutes();
-		// const timeDisplay = document.getElementById('time-display')
-		// timeDisplay.innerHTML = `<h2>${zeroPad(hours % 12, 2)}:${zeroPad(minutes, 2)}</h2>`
 		timeDisplay = `${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}`;
 		for (const [i, coords] of garageLocations.entries()) {
 			// if (!show) {
@@ -391,9 +390,11 @@
 	}
 
 	let capacities = {};
+	let staticCapacities = {};
 
 	async function runProcess(minuteGap: number) {
 		dataLoaded = false;
+		clearInterval(routeInterval);
 		await markDestination(minuteGap);
 		await sendRequest();
 		dataLoaded = true;
@@ -401,6 +402,7 @@
 	}
 
 	let inputNum: number = 0;
+	let lastInput = inputNum;
 	let output: any = { garage1: '', garage2: '', garage3: '' };
 
 	async function sendRequest() {
@@ -413,35 +415,50 @@
 		});
 		if (response.ok) {
 			output = await response.json();
+			console.log('OUTPUT BRO');
+			console.log(output);
 			let i = 0;
 			for (const garage in output) {
 				if (i === 3) break;
-				// console.log(output[garage].expected_occupancy);
 				capacities[garage] = output[garage].expected_occupancy;
 				i++;
 			}
+			let y = 1;
+			for (const marker in markers) {
+				markers[marker].setPopup(
+					new mapboxgl.Popup().setHTML(`<h2>Capacity: ${capacities[`garage${y}`]}</h2>`)
+				);
+				y++;
+			}
+			lastInput = inputNum;
 			inputNum = 0;
 		} else {
 			throw new Error('Failed to fulfill POST request to callML Svelte API from frontend');
 		}
 	}
+	
 	let show = false;
 
-	let menuShow = false;
-
-	function handleMenuOpen() {
-		menuShow = true;
-		document.body.addEventListener('click', handleMenuClose);
+	function switchMode() {
+		clearInterval(mlInterval);
+		show = !show;
+		if (show = true) {
+			startIntervalML();
+		} else {
+			startIntervalML(60000)
+		}
 	}
 
-	function handleMenuClose() {
-		menuShow = false;
-		document.body.removeEventListener('click', handleMenuClose);
-	}
 </script>
 
 <div class="big-container">
 	<div class="action-menu">
+		{#if show}
+			<button class="action-button back-button"
+				><div class="material-icons">arrow_back</div>
+				Back</button
+			>
+		{/if}
 		<label style="margin-bottom:5px;">Leaving in: </label>
 		<div class="user-input min">
 			<input
@@ -461,7 +478,14 @@
 			<button class="disabled-button">Loading location...</button>
 		{/if}
 	</div>
-	<div class="map" bind:this={mapContainer} />
+	<div class="map" bind:this={mapContainer}>
+		{#if !show}
+			<div class="live-view">
+				<h2>LIVE VIEW</h2>
+				<div class="red-circle blink" />
+			</div>
+		{/if}
+	</div>
 	{#if show}
 		<div class="results-menu" transition:fly={{ x: 200, duration: 300, easing: quintOut }}>
 			{#if dataLoaded}
@@ -585,6 +609,7 @@
 		justify-content: center;
 		padding: 5px;
 		transition: all 200ms ease;
+		gap: 0;
 	}
 
 	.route-time-wrapper div {
@@ -605,6 +630,17 @@
 		border-radius: 5px;
 		transition: all 100ms ease;
 		cursor: pointer;
+	}
+
+	.back-button {
+		background-color: rgba(0, 0, 0, 0);
+		border: 1px solid black;
+		color: black;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		top: 10px;
 	}
 
 	.disabled-button {
@@ -726,10 +762,32 @@
 		font-size: small;
 	}
 
-	.route-time-wrapper {
+	.live-view {
+		position: absolute;
+		top: 0;
+		left: 50%;
+		z-index: 2;
+		color: red;
+		-webkit-text-stroke-width: 1px;
+		-webkit-text-stroke-color: white;
 		display: flex;
 		align-items: center;
-		gap: 30px;
-		justify-content: flex-end;
+		gap: 10px;
+	}
+
+	.red-circle {
+		border-radius: 50%;
+		background-color: red;
+		height: 10px;
+		width: 10px;
+	}
+
+	.blink {
+		animation: blink-animation 1s steps(2, start) infinite;
+	}
+	@keyframes blink-animation {
+		to {
+			visibility: hidden;
+		}
 	}
 </style>

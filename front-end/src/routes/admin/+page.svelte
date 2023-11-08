@@ -26,7 +26,7 @@
 		height: calc(100% - 100px);
 		display: grid;
         gap:40px;
-        grid-template-columns: 1fr 5fr 3fr 1fr;
+        grid-template-columns: 1fr 8fr 5fr 1fr;
         grid-template-rows: 1fr 2fr 2fr;
 	}
 
