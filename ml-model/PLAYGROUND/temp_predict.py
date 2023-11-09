@@ -3,23 +3,14 @@ import numpy as np
 from tensorflow.keras.models import load_model
 import joblib
 
-# Load the trained model
-model = load_model('model_one.h5')
-print("Model loaded successfully.")
-
-# Load the scaler
-scaler = joblib.load('scaler_one.joblib')
-print("Scaler loaded successfully.")
-
 # Function to preprocess new data for prediction
-
-
-def preprocess_data_for_prediction(df, scaler, sequence_length=5):
+def preprocess_data_for_prediction(df, target_column, scaler, sequence_length=5):
     """
     Preprocess new input data for prediction.
 
     Parameters:
-    - df: pandas DataFrame containing the 'ts' and 'y1' columns
+    - df: pandas DataFrame containing the 'ts' and target_column columns
+    - target_column: the name of the target column in the DataFrame
     - scaler: an instance of sklearn's MinMaxScaler or similar
     - sequence_length: the number of previous time steps to use as input features
 
@@ -33,52 +24,55 @@ def preprocess_data_for_prediction(df, scaler, sequence_length=5):
     df['day_of_week'] = df['ts'].dt.dayofweek
     df['time_of_day'] = df['ts'].dt.hour + df['ts'].dt.minute / 60
 
-    # Scale the 'y1' column which represents the number of open spaces
-    df['y1_scaled'] = scaler.transform(df[['y1']])
+    # Scale the target column
+    df[target_column + '_scaled'] = scaler.transform(df[[target_column]])
 
     # Initialize X
     X = []
 
     # Create sequences of past observations as input features
     for i in range(sequence_length, len(df)):
-        X.append(df[['y1_scaled', 'day_of_week', 'time_of_day']
-                    ].iloc[i-sequence_length:i].values)
+        X.append(df[[target_column + '_scaled', 'day_of_week', 'time_of_day']].iloc[i-sequence_length:i].values)
 
     # Convert to numpy arrays
     X = np.array(X)
 
     return X
 
+# File paths, corresponding target column names, and model names
+file_info = {
+    'Sign1_full_fitted.csv': {'target_column': 'y1', 'model_name': 'model_Sign1_full_fitted.csv.h5', 'scaler_name': 'scaler_Sign1_full_fitted.csv.joblib'},
+    'Sign12_full_fitted.csv': {'target_column': 'y12', 'model_name': 'model_Sign12_full_fitted.csv.h5', 'scaler_name': 'scaler_Sign12_full_fitted.csv.joblib'},
+    'Sign14_full_fitted.csv': {'target_column': 'y14', 'model_name': 'model_Sign14_full_fitted.csv.h5', 'scaler_name': 'scaler_Sign14_full_fitted.csv.joblib'}
+}
 
-original_data = pd.read_csv('../Sign1_full_fitted.csv')
 
-X_new = preprocess_data_for_prediction(
-    original_data, scaler, sequence_length=5)
+# Process each file
+for file_name, info in file_info.items():
+    print(f"Processing {file_name}...")
+    
+    # Load the trained model
+    model = load_model(info['model_name'])
+    print("Model loaded successfully.")
 
-# The number of predictions made
-num_predictions = X_new.shape[0]
+    # Load the scaler
+    scaler = joblib.load(info['scaler_name'])
+    print("Scaler loaded successfully.")
 
-# Make predictions
-predictions_scaled = model.predict(X_new)
+    # Load the original data
+    original_data = pd.read_csv(file_name)
 
-# Print the number of predictions
-print(f"Making {num_predictions} predictions.")
+    # Preprocess the data for prediction
+    X_new = preprocess_data_for_prediction(
+        original_data, info['target_column'], scaler, sequence_length=5)
 
-# Inverse transform the predictions to get them back to the original scale
-predictions = scaler.inverse_transform(predictions_scaled)
+    # Make predictions
+    predictions_scaled = model.predict(X_new)
 
-sequence_length = 5
-forecast_horizon = 6
+    # Inverse transform the predictions to get them back to the original scale
+    predictions = scaler.inverse_transform(predictions_scaled)
 
-start_idx = sequence_length
-for i, prediction in enumerate(predictions):
-    # Assuming forecast_horizon is 6 for 30 min
-    future_indices = [start_idx + j for j in range(0, forecast_horizon * 5, 5)]
-    actual_values = original_data['y1'].iloc[future_indices].values
-    print(f"Prediction for the next 30 minutes: {prediction}")
-    print(f"Actual values for the next 30 minutes: {actual_values}\n")
-    start_idx += 1  # Assuming we step one minute at a time for each prediction
-
-# Display the predictions
-print("Predictions:")
-print(predictions)
+    # Display the predictions
+    print("Predictions for " + file_name + ":")
+    print(predictions)
+    print("\n")
