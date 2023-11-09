@@ -8,7 +8,8 @@
     "persistence": "docker-compose up",
     "migrate": "npx liquibase --defaultsFile=liquibase/liquibase.properties update",
     "serve": "node app.js",
-    "flask": "flask --app ml-model/predict run"
+    "flask": "flask --app ml-model/predict run",
+    "data_flask": "flask --app ml-model/mock_data run"
   },
   "keywords": [],
   "author": "",

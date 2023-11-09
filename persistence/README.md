@@ -1,4 +1,3 @@
-
 http://localhost:3000/users/1
 
 npx liquibase update
@@ -25,3 +24,6 @@ npm run dev
 Sample Flask Query
 http://127.0.0.1:5000/?garage1=10&garage2=10&garage3=7
 http://localhost:3000/users/1
+
+Data Flask Query
+http://127.0.0.1:5000/occupancy?day=0&time=08:00&entries=5
