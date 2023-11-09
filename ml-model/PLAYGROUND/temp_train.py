@@ -10,7 +10,7 @@ from sklearn.model_selection import TimeSeriesSplit
 import joblib
 
 
-def preprocess_data(df, scaler, sequence_length=5, forecast_horizon=6):
+def preprocess_data(df, scaler, sequence_length=5, forecast_horizon=6, step_size=5):
     """
     Preprocess the input data.
 
@@ -38,10 +38,11 @@ def preprocess_data(df, scaler, sequence_length=5, forecast_horizon=6):
     X, y = [], []
 
     # Create sequences of past observations as input features and future values as targets
-    for i in range(sequence_length, len(df) - forecast_horizon):
+    for i in range(sequence_length, len(df) - (forecast_horizon*step_size)):
         X.append(df[['y1', 'day_of_week', 'time_of_day']
                     ].iloc[i-sequence_length:i].values)
-        y.append(df['y1'].iloc[i:i+forecast_horizon].values)
+        y.append(
+            df['y1'].iloc[i:i + (forecast_horizon * step_size):step_size].values)
 
     # Convert to numpy arrays
     X = np.array(X)

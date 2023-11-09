@@ -4,11 +4,11 @@ from tensorflow.keras.models import load_model
 import joblib
 
 # Load the trained model
-model = load_model('model.h5')
+model = load_model('model_one.h5')
 print("Model loaded successfully.")
 
 # Load the scaler
-scaler = joblib.load('scaler.joblib')
+scaler = joblib.load('scaler_one.joblib')
 print("Scaler loaded successfully.")
 
 # Function to preprocess new data for prediction
