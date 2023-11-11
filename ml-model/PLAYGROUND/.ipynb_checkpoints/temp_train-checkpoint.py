@@ -85,7 +85,7 @@ for file_name, target_column in file_info.items():
 
     # Compile the model
     print("Compiling the model...")
-    model.compile(optimizer='adam', loss='mean_absolute_error')
+    model.compile(optimizer='adam', loss='mean_squared_error')
     print("Model compiled.")
 
     # Define callbacks
