@@ -1,5 +1,5 @@
 <script>
-	export let tableData  = [
+	export let data  = [
 			{
 				UID : 1,
 				createdAt : "2023-11-02 18:28:45",
@@ -24,19 +24,19 @@
                 rec_avail_3: 390,
                 rec_travel_time_3: 3,
 			},
-		];;
+		];
 </script>
 
 <table>
 	<thead>
 		<tr>
-			{#each Object.keys(tableData[0]) as columnHeading}
+			{#each Object.keys(data[0]) as columnHeading}
 				<th>{columnHeading}</th>
 			{/each}
 		</tr>
 	</thead>
 	<tbody>
-		{#each Object.values(tableData) as row}
+		{#each Object.values(data) as row}
 			<tr>
 				{#each Object.values(row) as cell}
 					<td>{cell}</td>
