@@ -52,9 +52,15 @@
 		}deg, gainsboro ${
 			360 * progress
 		}deg 360deg), conic-gradient(green 0deg, lightgreen 90deg, yellow 180deg, orange 270deg, red 345deg, orange 355deg, white 360deg)`;
-	$: garage1circle = `--background:${background((capacityMax.garage1 - capacities.garage1) / capacityMax.garage1)}`;
-	$: garage2circle = `--background:${background((capacityMax.garage2 - capacities.garage2) / capacityMax.garage2)}`;
-	$: garage3circle = `--background:${background((capacityMax.garage3 - capacities.garage3) / capacityMax.garage3)}`;
+	$: garage1circle = `--background:${background(
+		(capacityMax.garage1 - capacities.garage1) / capacityMax.garage1
+	)}`;
+	$: garage2circle = `--background:${background(
+		(capacityMax.garage2 - capacities.garage2) / capacityMax.garage2
+	)}`;
+	$: garage3circle = `--background:${background(
+		(capacityMax.garage3 - capacities.garage3) / capacityMax.garage3
+	)}`;
 
 	// create a function to make a directions request
 	async function getRoute(end: any, id: number, timeString?: string, draw: boolean = false) {
@@ -151,7 +157,7 @@
 		const capacity = capacities[garage];
 		const fraction = (capacityMax[garage] - capacity) / capacityMax[garage];
 
-		progressCircle.innerHTML = `<p>${capacity} remaining</p>`
+		progressCircle.innerHTML = `<p>${capacity} remaining</p>`;
 		progressCircle.id = 'progress-circle';
 		const backgroundProp = background(fraction);
 		progressCircle.style.setProperty('--background', backgroundProp);
@@ -174,18 +180,9 @@
 
 		markers = {
 			// (700 - capacities['garage1']) / 700
-			marker1: new mapboxgl.Marker({
-			})
-				.setLngLat(garageLocations[0])
-				.addTo(map),
-			marker2: new mapboxgl.Marker({
-			})
-				.setLngLat(garageLocations[1])
-				.addTo(map),
-			marker3: new mapboxgl.Marker({
-			})
-				.setLngLat(garageLocations[2])
-				.addTo(map)
+			marker1: new mapboxgl.Marker({}).setLngLat(garageLocations[0]).addTo(map),
+			marker2: new mapboxgl.Marker({}).setLngLat(garageLocations[1]).addTo(map),
+			marker3: new mapboxgl.Marker({}).setLngLat(garageLocations[2]).addTo(map)
 		};
 		if ('geolocation' in navigator) {
 			navigator.geolocation.getCurrentPosition(
@@ -437,6 +434,7 @@
 		await markDestination(minuteGap);
 		switchMode(true);
 		await sendRequest();
+		console.log(capacities);
 		dataLoaded = true;
 		lastInputNum = inputNum;
 		inputNum = 0;
@@ -467,9 +465,7 @@
 				// markers[marker].setPopup(
 				// 	new mapboxgl.Popup().setHTML(`<h2>Capacity: ${capacities[`garage${y}`]}</h2>`)
 				// );
-				markers[marker].setPopup(
-					new mapboxgl.Popup().setHTML(createProgressCircle(`garage${y}`))
-				);
+				markers[marker].setPopup(new mapboxgl.Popup().setHTML(createProgressCircle(`garage${y}`)));
 				y++;
 			}
 		} else {

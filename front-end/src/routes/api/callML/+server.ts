@@ -20,11 +20,12 @@ export async function POST({ request }) {
     //     },
     //     body: JSON.stringify({ inputs })
     // })
-    // if (response.ok) {
-    //     const data = await response.json();
-    //     return json(data);
-    // } else {
-    //     throw new Error("Failed to fulfill POST request to express.js predict API.")
-    // }
+    if (response.ok) {
+        const data = await response.json();
+        console.log(data)
+        return json(data);
+    } else {
+        throw new Error("Failed to fulfill POST request to express.js predict API.")
+    }
 }
 
