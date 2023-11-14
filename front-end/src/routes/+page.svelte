@@ -30,10 +30,11 @@
 	const garageLocations: mapboxgl.LngLatLike[] = [
 		[-80.42633819580078, 37.23112106323242],
 		[-80.42050170898438, 37.233638763427734],
-		[-80.413885, 37.228099]
+		[-80.41342893440408, 37.227929917832995]
 	];
 
 	let markers = {};
+	let markerPopup = {};
 
 	const routeColors = ['red', 'green', 'blue', 'black'];
 	let routeTimeDisplays = ['', '', ''];
@@ -44,6 +45,12 @@
 		garage1: 700,
 		garage2: 600,
 		garage3: 400
+	};
+
+	const garageNames = {
+		garage1: 'Perry Street',
+		garage2: 'North End',
+		garage3: 'Kent Square'
 	};
 
 	const background = (progress: number) =>
@@ -72,7 +79,6 @@
 		},${end[1]}?steps=true&geometries=geojson&access_token=${accessToken}${
 			timeString ? `&depart_at=${timeString}` : ''
 		}`;
-		// console.log(request)
 		const query = await fetch(request, { method: 'GET' });
 		// &depart_at=2019-05-02T15:00
 		const json = await query.json();
@@ -114,10 +120,10 @@
 		}
 		// add turn instructions here at the end
 		const minutes = Math.floor(data.duration / 60);
-		dataPackage[`garage${id + 1}`] = minutes + inputNum;
+		dataPackage[`garage${id + 1}`] = minutes + lastInputNum;
 		routeTimeDisplays[id] = `Trip duration: ${minutes} minutes`;
-		lastInputNum = inputNum;
-		inputNum = 0;
+		// lastInputNum = inputNum;
+		// inputNum = 0;
 	}
 
 	// Call  this only after the route has been gotten
@@ -153,6 +159,10 @@
 	}
 
 	function createProgressCircle(garage: string) {
+		const wrapper = document.createElement('div');
+		wrapper.style.display = 'flex';
+		wrapper.style.flexDirection = 'column';
+		wrapper.style.alignItems = 'center';
 		const progressCircle = document.createElement('div');
 		const capacity = capacities[garage];
 		const fraction = (capacityMax[garage] - capacity) / capacityMax[garage];
@@ -161,7 +171,8 @@
 		progressCircle.id = 'progress-circle';
 		const backgroundProp = background(fraction);
 		progressCircle.style.setProperty('--background', backgroundProp);
-		return progressCircle.outerHTML;
+		wrapper.innerHTML = `<p><strong>${garageNames[garage]}</strong></p>${progressCircle.outerHTML}`;
+		return wrapper.outerHTML;
 	}
 
 	onMount(() => {
@@ -174,16 +185,25 @@
 			zoom: initialState.zoom
 		});
 
+		markers = {
+			marker1: new mapboxgl.Marker({}).setLngLat(garageLocations[0]),
+			marker2: new mapboxgl.Marker({}).setLngLat(garageLocations[1]),
+			marker3: new mapboxgl.Marker({}).setLngLat(garageLocations[2])
+		};
+
+		markerPopup = {
+			marker1: new mapboxgl.Popup(),
+			marker2: new mapboxgl.Popup(),
+			marker3: new mapboxgl.Popup()
+		};
+
 		startIntervalML();
 
-		// let circleElement = document.getElement
+		for (const marker in markers) {
+			markers[marker].setPopup(markerPopup[marker]);
+			markers[marker].addTo(map);
+		}
 
-		markers = {
-			// (700 - capacities['garage1']) / 700
-			marker1: new mapboxgl.Marker({}).setLngLat(garageLocations[0]).addTo(map),
-			marker2: new mapboxgl.Marker({}).setLngLat(garageLocations[1]).addTo(map),
-			marker3: new mapboxgl.Marker({}).setLngLat(garageLocations[2]).addTo(map)
-		};
 		if ('geolocation' in navigator) {
 			navigator.geolocation.getCurrentPosition(
 				function (position) {
@@ -364,7 +384,6 @@
 			// Add a new layer to visualize the polygon.
 
 			for (const key in { perry: '', northend: '', kentsquare: '' }) {
-				console.log();
 				map.addLayer({
 					id: key,
 					type: 'fill',
@@ -399,15 +418,25 @@
 
 	let timeDisplay = ``;
 
+	// function convertTo12HourFormat(timeString: string) {
+	// 	let [hours, minutes] = timeString.split(':').map(Number);
+	// 	let suffix = hours >= 12 ? 'PM' : 'AM';
+	// 	hours = hours % 12 || 12;
+	// 	minutes = minutes < 10 ? '0' + minutes : minutes;
+	// 	return `${hours}:${minutes} ${suffix}`;
+	// }
+
 	function getDepartureTime(minuteGap: number): string {
 		const zeroPad = (num: number, places: number) => String(num).padStart(places, '0');
 		const newTime = new Date();
 		newTime.setMinutes(newTime.getMinutes() + minuteGap);
 		let isoTimeString = newTime.toISOString();
 		isoTimeString = newTime.toISOString().substring(0, isoTimeString.length - 8);
-		const hours = newTime.getHours();
+		let hours = newTime.getHours();
 		const minutes = newTime.getMinutes();
-		timeDisplay = `${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}`;
+		let suffix = hours >= 12 ? 'PM' : 'AM';
+		hours = hours % 12 || 12;
+		timeDisplay = `${hours}:${zeroPad(minutes, 2)} ${suffix}`;
 		return isoTimeString;
 	}
 
@@ -430,13 +459,13 @@
 
 	async function runProcess(minuteGap: number) {
 		dataLoaded = false;
+		lastInputNum = inputNum;
 		clearInterval(routeInterval);
 		await markDestination(minuteGap);
 		switchMode(true);
 		await sendRequest();
 		console.log(capacities);
 		dataLoaded = true;
-		lastInputNum = inputNum;
 		inputNum = 0;
 	}
 
@@ -465,7 +494,8 @@
 				// markers[marker].setPopup(
 				// 	new mapboxgl.Popup().setHTML(`<h2>Capacity: ${capacities[`garage${y}`]}</h2>`)
 				// );
-				markers[marker].setPopup(new mapboxgl.Popup().setHTML(createProgressCircle(`garage${y}`)));
+				// markers[marker].setPopup(new mapboxgl.Popup().setHTML(createProgressCircle(`garage${y}`)));
+				markerPopup[marker].setHTML(createProgressCircle(`garage${y}`));
 				y++;
 			}
 		} else {
@@ -480,6 +510,9 @@
 		show = toggle;
 		if (show == false) {
 			lastInputNum = 0;
+			// for (let i = 0; i < 3; i++) {
+			// 	map.getSource(`route${i}`).remove();
+			// }
 			startIntervalML();
 		} else {
 			startIntervalML(60000, true);
@@ -522,12 +555,17 @@
 			</div>
 		{/if}
 	</div>
+	<!-- {#if show}
+		<div class="map-shadow" style></div>
+	{:else}
+	{/if} -->
+	<div class="map-shadow" style="right:0px" />
 	{#if show}
 		<div class="results-menu" transition:fly={{ x: 200, duration: 300, easing: quintOut }}>
 			{#if dataLoaded}
 				<div class="results-results">
 					<h2>Results</h2>
-					<h3>Departure time: {timeDisplay}</h3>
+					<h4>Departure time: {timeDisplay}</h4>
 					<!-- <div class="result-divider"></div> -->
 					{#key dataPackage}
 						<div class="route-time-wrapper">
@@ -541,7 +579,7 @@
 						</div>
 						<div class="result-divider" />
 						<div class="route-time-wrapper">
-							<h3>Kent Square Garage:</h3>
+							<h3>North End Garage:</h3>
 							<div>
 								<p>{routeTimeDisplays[1]}</p>
 								<div id="progress-circle" style={garage2circle}>
@@ -551,7 +589,7 @@
 						</div>
 						<div class="result-divider" />
 						<div class="route-time-wrapper">
-							<h3>North End Garage:</h3>
+							<h3>Kent Square Garage:</h3>
 							<div>
 								<p>{routeTimeDisplays[2]}</p>
 								<div id="progress-circle" style={garage3circle}>
@@ -598,6 +636,15 @@
 		/* align-self: center; */
 	}
 
+	.map-shadow {
+		box-shadow: inset rgba(0, 0, 0, 0.5) 0px 10px 30px;
+		position: absolute;
+		left: 260px;
+		height: 100%;
+		pointer-events: none;
+		background-color: rgba(0, 0, 0, 0);
+	}
+
 	.action-menu {
 		display: flex;
 		justify-content: center;
@@ -605,14 +652,19 @@
 		flex-direction: column;
 		width: 200px;
 		padding: 30px;
-		box-shadow: rgba(0, 0, 0, 0.5) 10px 10px 30px;
+		/* box-shadow: rgba(0, 0, 0, 0.5) 10px 10px 30px; */
 		z-index: 2;
 	}
 
 	.results-menu {
-		width: 300px;
+		position: absolute;
+		width: 220px;
+		height: 100%;
 		z-index: 2;
-		box-shadow: rgba(0, 0, 0, 0.5) -10px 10px 30px;
+		right: 0;
+		background-color: white;
+		box-shadow: rgba(0, 0, 0, 0.5) 0px 10px 30px;
+		overflow-y: auto;
 	}
 
 	.results-results {
@@ -698,6 +750,7 @@
 
 	.action-button:active {
 		transform: scale(0.95);
+		box-shadow: inset rgba(0, 0, 0, 0.2) 5px 5px 10px;
 	}
 
 	.user-input {
