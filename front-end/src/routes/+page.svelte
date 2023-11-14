@@ -40,12 +40,21 @@
 	let dataPackage = { garage1: 0, garage2: 0, garage3: 0 };
 	let dataLoaded = false;
 
-	const background = (progress: number) => `radial-gradient(white 50%, transparent 51%),
-    conic-gradient(transparent 0deg ${360 * progress}deg, gainsboro ${360 * progress}deg 360deg),
-    conic-gradient(green 0deg, lightgreen 90deg, yellow 180deg, orange 270deg, red 345deg, orange 355deg, white 360deg);`;
-	$: garage1circle = `--background:${background((700 - capacities['garage1']) / 700)}`;
-	$: garage2circle = `--background:${background((600 - capacities['garage2']) / 600)}`;
-	$: garage3circle = `--background:${background((400 - capacities['garage3']) / 400)}`;
+	const capacityMax = {
+		garage1: 700,
+		garage2: 600,
+		garage3: 400
+	};
+
+	const background = (progress: number) =>
+		`radial-gradient(white 50%, transparent 51%), conic-gradient(transparent 0deg ${
+			360 * progress
+		}deg, gainsboro ${
+			360 * progress
+		}deg 360deg), conic-gradient(green 0deg, lightgreen 90deg, yellow 180deg, orange 270deg, red 345deg, orange 355deg, white 360deg)`;
+	$: garage1circle = `--background:${background((capacityMax.garage1 - capacities.garage1) / capacityMax.garage1)}`;
+	$: garage2circle = `--background:${background((capacityMax.garage2 - capacities.garage2) / capacityMax.garage2)}`;
+	$: garage3circle = `--background:${background((capacityMax.garage3 - capacities.garage3) / capacityMax.garage3)}`;
 
 	// create a function to make a directions request
 	async function getRoute(end: any, id: number, timeString?: string, draw: boolean = false) {
@@ -101,6 +110,8 @@
 		const minutes = Math.floor(data.duration / 60);
 		dataPackage[`garage${id + 1}`] = minutes + inputNum;
 		routeTimeDisplays[id] = `Trip duration: ${minutes} minutes`;
+		lastInputNum = inputNum;
+		inputNum = 0;
 	}
 
 	// Call  this only after the route has been gotten
@@ -115,17 +126,39 @@
 
 	let locationLoaded = false;
 
-	async function startIntervalML(delayMS: number = 5000) {
+	async function startIntervalML(delayMS: number = 5000, updateTime: boolean = false) {
 		for (const [i, coords] of garageLocations.entries()) {
 			getRoute(coords, i);
 		}
-		mlInterval = setInterval(() => {
-			sendRequest();
-		}, delayMS);
+		function startInterval() {
+			mlInterval = setInterval(() => {
+				sendRequest();
+				if (updateTime) getDepartureTime(lastInputNum);
+			}, delayMS);
+		}
+
+		if (delayMS < 30000) {
+			startInterval();
+		} else {
+			const now = new Date(),
+				delay = delayMS - (now % delayMS);
+			setTimeout(startInterval, delay);
+		}
+	}
+
+	function createProgressCircle(garage: string) {
+		const progressCircle = document.createElement('div');
+		const capacity = capacities[garage];
+		const fraction = (capacityMax[garage] - capacity) / capacityMax[garage];
+
+		progressCircle.innerHTML = `<p>${capacity} remaining</p>`
+		progressCircle.id = 'progress-circle';
+		const backgroundProp = background(fraction);
+		progressCircle.style.setProperty('--background', backgroundProp);
+		return progressCircle.outerHTML;
 	}
 
 	onMount(() => {
-		console.log('LOADING');
 		const initialState = { lng: lng, lat: lat, zoom: zoom };
 		map = new Map({
 			container: mapContainer,
@@ -137,24 +170,23 @@
 
 		startIntervalML();
 
+		// let circleElement = document.getElement
+
 		markers = {
+			// (700 - capacities['garage1']) / 700
 			marker1: new mapboxgl.Marker({
-				color: '#FFFFFF'
 			})
 				.setLngLat(garageLocations[0])
 				.addTo(map),
 			marker2: new mapboxgl.Marker({
-				color: '#FFFFFF'
 			})
 				.setLngLat(garageLocations[1])
 				.addTo(map),
 			marker3: new mapboxgl.Marker({
-				color: '#FFFFFF'
 			})
 				.setLngLat(garageLocations[2])
 				.addTo(map)
 		};
-
 		if ('geolocation' in navigator) {
 			navigator.geolocation.getCurrentPosition(
 				function (position) {
@@ -370,8 +402,8 @@
 
 	let timeDisplay = ``;
 
-	async function markDestination(minuteGap: number) {
-		const zeroPad = (num, places) => String(num).padStart(places, '0');
+	function getDepartureTime(minuteGap: number): string {
+		const zeroPad = (num: number, places: number) => String(num).padStart(places, '0');
 		const newTime = new Date();
 		newTime.setMinutes(newTime.getMinutes() + minuteGap);
 		let isoTimeString = newTime.toISOString();
@@ -379,6 +411,11 @@
 		const hours = newTime.getHours();
 		const minutes = newTime.getMinutes();
 		timeDisplay = `${zeroPad(hours, 2)}:${zeroPad(minutes, 2)}`;
+		return isoTimeString;
+	}
+
+	async function markDestination(minuteGap: number) {
+		const isoTimeString = getDepartureTime(minuteGap);
 		for (const [i, coords] of garageLocations.entries()) {
 			// if (!show) {
 			// 	// const marker1 = new mapboxgl.Marker().setLngLat(coords).addTo(map);
@@ -386,23 +423,27 @@
 			// }
 			await getRoute(coords, i, isoTimeString, true);
 		}
-		show = true;
 	}
 
-	let capacities = {};
-	let staticCapacities = {};
+	let capacities = {
+		garage1: 0,
+		garage2: 0,
+		garage3: 0
+	};
 
 	async function runProcess(minuteGap: number) {
 		dataLoaded = false;
 		clearInterval(routeInterval);
 		await markDestination(minuteGap);
+		switchMode(true);
 		await sendRequest();
 		dataLoaded = true;
+		lastInputNum = inputNum;
 		inputNum = 0;
 	}
 
 	let inputNum: number = 0;
-	let lastInput = inputNum;
+	let lastInputNum: number = inputNum;
 	let output: any = { garage1: '', garage2: '', garage3: '' };
 
 	async function sendRequest() {
@@ -415,8 +456,6 @@
 		});
 		if (response.ok) {
 			output = await response.json();
-			console.log('OUTPUT BRO');
-			console.log(output);
 			let i = 0;
 			for (const garage in output) {
 				if (i === 3) break;
@@ -425,36 +464,37 @@
 			}
 			let y = 1;
 			for (const marker in markers) {
+				// markers[marker].setPopup(
+				// 	new mapboxgl.Popup().setHTML(`<h2>Capacity: ${capacities[`garage${y}`]}</h2>`)
+				// );
 				markers[marker].setPopup(
-					new mapboxgl.Popup().setHTML(`<h2>Capacity: ${capacities[`garage${y}`]}</h2>`)
+					new mapboxgl.Popup().setHTML(createProgressCircle(`garage${y}`))
 				);
 				y++;
 			}
-			lastInput = inputNum;
-			inputNum = 0;
 		} else {
 			throw new Error('Failed to fulfill POST request to callML Svelte API from frontend');
 		}
 	}
-	
+
 	let show = false;
 
-	function switchMode() {
+	function switchMode(toggle: boolean = false) {
 		clearInterval(mlInterval);
-		show = !show;
-		if (show = true) {
+		show = toggle;
+		if (show == false) {
+			lastInputNum = 0;
 			startIntervalML();
 		} else {
-			startIntervalML(60000)
+			startIntervalML(60000, true);
 		}
 	}
-
 </script>
 
 <div class="big-container">
 	<div class="action-menu">
 		{#if show}
-			<button class="action-button back-button"
+			<button on:click={() => switchMode(false)} class="action-button back-button"
 				><div class="material-icons">arrow_back</div>
 				Back</button
 			>
@@ -491,7 +531,7 @@
 			{#if dataLoaded}
 				<div class="results-results">
 					<h2>Results</h2>
-					<h3>Arrival time: {timeDisplay}</h3>
+					<h3>Departure time: {timeDisplay}</h3>
 					<!-- <div class="result-divider"></div> -->
 					{#key dataPackage}
 						<div class="route-time-wrapper">
@@ -499,7 +539,7 @@
 							<div>
 								<p>{routeTimeDisplays[0]}</p>
 								<div id="progress-circle" style={garage1circle}>
-									<p>{capacities['garage1']} remaining</p>
+									<p>{capacities.garage1} remaining</p>
 								</div>
 							</div>
 						</div>
@@ -509,7 +549,7 @@
 							<div>
 								<p>{routeTimeDisplays[1]}</p>
 								<div id="progress-circle" style={garage2circle}>
-									<p>{capacities['garage2']} remaining</p>
+									<p>{capacities.garage2} remaining</p>
 								</div>
 							</div>
 						</div>
@@ -519,7 +559,7 @@
 							<div>
 								<p>{routeTimeDisplays[2]}</p>
 								<div id="progress-circle" style={garage3circle}>
-									<p>{capacities['garage3']} remaining</p>
+									<p>{capacities.garage3} remaining</p>
 								</div>
 							</div>
 						</div>
@@ -749,12 +789,11 @@
 		}
 	}
 
-	#progress-circle {
+	:global(#progress-circle) {
 		background: var(--background);
 		border-radius: 50%;
 		width: 120px;
 		height: 120px;
-		transition: all 500ms ease-in;
 		will-change: transform;
 		display: flex;
 		justify-content: center;
@@ -790,4 +829,10 @@
 			visibility: hidden;
 		}
 	}
+
+	/* :global(#test) {
+		height:100px;
+		width:100px;
+		background-color:blue;
+	} */
 </style>

@@ -1,5 +1,8 @@
 <script lang="ts">
     import Table from '$lib/components/Table.svelte';
+
+    /** @type {import('./$types').PageData} */
+    export let data: any;
 </script>
 
 
@@ -8,7 +11,7 @@
     <div class="user-history-container">
         <h3>User history</h3>
         <div class="user-table-container">
-            <Table/>
+            <Table data={data.sessions}/>
         </div>
     </div>  
     <div class="some-graph">

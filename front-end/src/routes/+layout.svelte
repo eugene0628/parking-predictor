@@ -24,7 +24,7 @@
 
 <div class="nav-bar">
 	<a href="/">
-		<h1 class="title">Parking Prediction Frontend</h1>
+		<h1 class="title">Parking Prediction</h1>
 	</a>
 	<div class="nav-button-container">
 		<a class="nav-button admin-button" href="/admin">Admin panel</a>
