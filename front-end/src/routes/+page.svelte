@@ -514,7 +514,8 @@
 			// }
 			startIntervalML();
 		} else {
-			startIntervalML(60000, true);
+			if (lastInputNum === 0)
+				startIntervalML(60000, true);
 		}
 	}
 </script>
