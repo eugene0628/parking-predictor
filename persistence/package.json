@@ -9,7 +9,7 @@
     "migrate": "npx liquibase --defaultsFile=liquibase/liquibase.properties update",
     "serve": "node app.js",
     "flask": "flask --app ml-model/predict run",
-    "data_flask": "flask --app ml-model/mock_data run"
+    "sample_user": "node scripts/createSampleUser.js"
   },
   "keywords": [],
   "author": "",
