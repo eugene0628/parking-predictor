@@ -11,6 +11,8 @@ app.use(cors());
 // Include routes
 app.use('/users', require('./routes/users'));
 app.use('/predict', require('./routes/predict'));
+app.use('/sessions', require('./routes/sessions'));
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
