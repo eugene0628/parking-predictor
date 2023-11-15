@@ -5,7 +5,6 @@ import { SECRET_NODE_LINK } from '$env/static/private';
 export async function POST({ request }) {
     const endpoint = `${SECRET_NODE_LINK}/predict`
     const dataPackage = await request.json()
-    console.log(JSON.stringify(dataPackage))
     const response = await fetch(endpoint, {
         method: "POST",
         headers: {
