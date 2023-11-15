@@ -69,6 +69,8 @@
 		(capacityMax.garage3 - capacities.garage3) / capacityMax.garage3
 	)}`;
 
+	$: circleStyles = [garage1circle, garage2circle, garage3circle];
+
 	// create a function to make a directions request
 	async function getRoute(end: any, id: number, timeString?: string, draw: boolean = false) {
 		// make a directions request using cycling profile
@@ -514,7 +516,8 @@
 			// }
 			startIntervalML();
 		} else {
-			startIntervalML(60000, true);
+			if (lastInputNum === 0)
+				startIntervalML(60000, true);
 		}
 	}
 </script>
@@ -567,35 +570,20 @@
 					<h4>Departure time: {timeDisplay}</h4>
 					<!-- <div class="result-divider"></div> -->
 					{#key dataPackage}
-						<div class="route-time-wrapper">
-							<h3>Perry Street Garage:</h3>
-							<div>
-								<p>{routeTimeDisplays[0]}</p>
-								<div id="progress-circle" style={garage1circle}>
-									<p>{capacities.garage1} remaining</p>
+						{#each Object.keys(garageNames) as garage, i}
+							{#if i !== 0}
+								<div class="result-divider"/>
+							{/if}
+							<div class="route-time-wrapper">
+								<h3>{garageNames[garage]}:</h3>
+								<div>
+									<p>{routeTimeDisplays[i]}</p>
+									<div id="progress-circle" style={circleStyles[i]}>
+										<p>{capacities[`garage${i+1}`]} remaining</p>
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="result-divider" />
-						<div class="route-time-wrapper">
-							<h3>North End Garage:</h3>
-							<div>
-								<p>{routeTimeDisplays[1]}</p>
-								<div id="progress-circle" style={garage2circle}>
-									<p>{capacities.garage2} remaining</p>
-								</div>
-							</div>
-						</div>
-						<div class="result-divider" />
-						<div class="route-time-wrapper">
-							<h3>Kent Square Garage:</h3>
-							<div>
-								<p>{routeTimeDisplays[2]}</p>
-								<div id="progress-circle" style={garage3circle}>
-									<p>{capacities.garage3} remaining</p>
-								</div>
-							</div>
-						</div>
+						{/each}
 					{/key}
 				</div>
 			{:else}
