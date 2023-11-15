@@ -27,30 +27,39 @@
 	let userLat = lat;
 	let start = [lng, lat];
 
-	const garageLocations: mapboxgl.LngLatLike[] = [
-		[-80.42633819580078, 37.23112106323242],
-		[-80.42050170898438, 37.233638763427734],
-		[-80.41342893440408, 37.227929917832995]
-	];
+	const garageLocations = {
+		garage1: [-80.41342893440408, 37.227929917832995],
+		garage2: [-80.42633819580078, 37.23112106323242],
+		garage3: [-80.42050170898438, 37.233638763427734]
+	};
 
 	let markers = {};
 	let markerPopup = {};
 
-	const routeColors = ['red', 'green', 'blue', 'black'];
-	let routeTimeDisplays = ['', '', ''];
+	const routeColors = {
+		garage1: 'red',
+		garage2: 'green',
+		garage3: 'blue'
+	}
+
+	let routeTimeDisplays = {
+		garage1: '',
+		garage2: '',
+		garage3: ''
+	}
 	let dataPackage = { garage1: 0, garage2: 0, garage3: 0 };
 	let dataLoaded = false;
 
 	const capacityMax = {
-		garage1: 700,
-		garage2: 600,
-		garage3: 400
+		garage1: 380,
+		garage2: 750,
+		garage3: 800
 	};
 
 	const garageNames = {
-		garage1: 'Perry Street',
-		garage2: 'North End',
-		garage3: 'Kent Square'
+		garage1: 'Kent Square',
+		garage2: 'Perry Street',
+		garage3: 'North End'
 	};
 
 	const background = (progress: number) =>
@@ -69,13 +78,20 @@
 		(capacityMax.garage3 - capacities.garage3) / capacityMax.garage3
 	)}`;
 
-	$: circleStyles = [garage1circle, garage2circle, garage3circle];
+	// $: circleStyles = [garage1circle, garage2circle, garage3circle];
+
+	$: circleStyles = {
+		garage1: garage1circle,
+		garage2: garage2circle,
+		garage3: garage3circle
+	}
 
 	// create a function to make a directions request
-	async function getRoute(end: any, id: number, timeString?: string, draw: boolean = false) {
+	async function getRoute(garage: string, timeString?: string, draw: boolean = false) {
 		// make a directions request using cycling profile
 		// an arbitrary start will always be the same
 		// only the end or destination will change
+		const end = garageLocations[garage];
 		let request = `https://api.mapbox.com/directions/v5/mapbox/driving/${start[0]},${start[1]};${
 			end[0]
 		},${end[1]}?steps=true&geometries=geojson&access_token=${accessToken}${
@@ -96,13 +112,13 @@
 				}
 			};
 			// if the route already exists on the map, we'll reset it using setData
-			if (map.getSource(`route${id}`)) {
-				map.getSource(`route${id}`).setData(geojson);
+			if (map.getSource(`route${garage}`)) {
+				map.getSource(`route${garage}`).setData(geojson);
 			}
 			// otherwise, we'll make a new request
 			else {
 				map.addLayer({
-					id: `route${id}`,
+					id: `route${garage}`,
 					type: 'line',
 					source: {
 						type: 'geojson',
@@ -113,7 +129,7 @@
 						'line-cap': 'round'
 					},
 					paint: {
-						'line-color': routeColors[id],
+						'line-color': routeColors[garage],
 						'line-width': 5,
 						'line-opacity': 0.75
 					}
@@ -122,8 +138,8 @@
 		}
 		// add turn instructions here at the end
 		const minutes = Math.floor(data.duration / 60);
-		dataPackage[`garage${id + 1}`] = minutes + lastInputNum;
-		routeTimeDisplays[id] = `Trip duration: ${minutes} minutes`;
+		dataPackage[garage] = minutes + lastInputNum;
+		routeTimeDisplays[garage] = `Trip duration: ${minutes} minutes`;
 		// lastInputNum = inputNum;
 		// inputNum = 0;
 	}
@@ -140,9 +156,9 @@
 
 	let locationLoaded = false;
 
-	async function startIntervalML(delayMS: number = 5000, updateTime: boolean = false) {
-		for (const [i, coords] of garageLocations.entries()) {
-			getRoute(coords, i);
+	function startIntervalML(delayMS: number = 30000, updateTime: boolean = false) {
+		for (const garage in garageLocations) {
+			getRoute(garage);
 		}
 		function startInterval() {
 			mlInterval = setInterval(() => {
@@ -188,22 +204,20 @@
 		});
 
 		markers = {
-			marker1: new mapboxgl.Marker({}).setLngLat(garageLocations[0]),
-			marker2: new mapboxgl.Marker({}).setLngLat(garageLocations[1]),
-			marker3: new mapboxgl.Marker({}).setLngLat(garageLocations[2])
+			garage1: new mapboxgl.Marker({}).setLngLat(garageLocations.garage1),
+			garage2: new mapboxgl.Marker({}).setLngLat(garageLocations.garage2),
+			garage3: new mapboxgl.Marker({}).setLngLat(garageLocations.garage3)
 		};
 
 		markerPopup = {
-			marker1: new mapboxgl.Popup(),
-			marker2: new mapboxgl.Popup(),
-			marker3: new mapboxgl.Popup()
+			garage1: new mapboxgl.Popup(),
+			garage2: new mapboxgl.Popup(),
+			garage3: new mapboxgl.Popup()
 		};
 
-		startIntervalML();
-
-		for (const marker in markers) {
-			markers[marker].setPopup(markerPopup[marker]);
-			markers[marker].addTo(map);
+		for (const garage in markers) {
+			markers[garage].setPopup(markerPopup[garage]);
+			markers[garage].addTo(map);
 		}
 
 		if ('geolocation' in navigator) {
@@ -285,6 +299,8 @@
 						}
 					});
 					locationLoaded = true;
+					startIntervalML();
+					sendRequest();
 				},
 				function (error) {
 					console.error('Error getting location:', error.message);
@@ -420,14 +436,6 @@
 
 	let timeDisplay = ``;
 
-	// function convertTo12HourFormat(timeString: string) {
-	// 	let [hours, minutes] = timeString.split(':').map(Number);
-	// 	let suffix = hours >= 12 ? 'PM' : 'AM';
-	// 	hours = hours % 12 || 12;
-	// 	minutes = minutes < 10 ? '0' + minutes : minutes;
-	// 	return `${hours}:${minutes} ${suffix}`;
-	// }
-
 	function getDepartureTime(minuteGap: number): string {
 		const zeroPad = (num: number, places: number) => String(num).padStart(places, '0');
 		const newTime = new Date();
@@ -444,12 +452,8 @@
 
 	async function markDestination(minuteGap: number) {
 		const isoTimeString = getDepartureTime(minuteGap);
-		for (const [i, coords] of garageLocations.entries()) {
-			// if (!show) {
-			// 	// const marker1 = new mapboxgl.Marker().setLngLat(coords).addTo(map);
-			// 	markers[`marker${i + 1}`].addTo(map);
-			// }
-			await getRoute(coords, i, isoTimeString, true);
+		for (const garage in garageLocations) {
+			await getRoute(garage, isoTimeString, true);
 		}
 	}
 
@@ -468,6 +472,7 @@
 		await sendRequest();
 		dataLoaded = true;
 		inputNum = 0;
+		sortGarages();
 	}
 
 	let inputNum: number = 0;
@@ -487,17 +492,11 @@
 			let i = 0;
 			for (const garage in output) {
 				if (i === 3) break;
-				capacities[garage] = output[garage].expected_occupancy;
+				capacities[garage] = Math.floor(output[garage].expected_occupancy);
 				i++;
 			}
-			let y = 1;
-			for (const marker in markers) {
-				// markers[marker].setPopup(
-				// 	new mapboxgl.Popup().setHTML(`<h2>Capacity: ${capacities[`garage${y}`]}</h2>`)
-				// );
-				// markers[marker].setPopup(new mapboxgl.Popup().setHTML(createProgressCircle(`garage${y}`)));
-				markerPopup[marker].setHTML(createProgressCircle(`garage${y}`));
-				y++;
+			for (const garage in markers) {
+				markerPopup[garage].setHTML(createProgressCircle(garage));
 			}
 		} else {
 			throw new Error('Failed to fulfill POST request to callML Svelte API from frontend');
@@ -516,9 +515,42 @@
 			// }
 			startIntervalML();
 		} else {
-			if (lastInputNum === 0)
-				startIntervalML(60000, true);
+			if (lastInputNum === 0) startIntervalML(60000, true);
 		}
+	}
+
+	let sortType = 'recommended';
+	let sortedKeys = ['garage1', 'garage2', 'garage3'];
+	// capacities, dataPackage
+	function sortGarages() {
+		let validCapacities = false; // Not all over 50 or all full
+		let validTravelTimes = false;
+		for (const garage in capacities) {
+			const capacity = capacities[garage];
+			const travelTime = dataPackage[garage];
+			if (capacity > 0 && capacity <= 1000) {
+				validCapacities = true;
+			}
+			if (travelTime > 0) {
+				validTravelTimes = true;
+			}
+		}
+		if (validCapacities && validTravelTimes) {
+			if (sortType === 'travel time') {
+				sortedKeys = sortedKeys.sort((a, b) => dataPackage[a] - dataPackage[b]);
+			} else if (sortType === 'capacity') {
+				sortedKeys = sortedKeys.sort((a, b) => capacities[b] - capacities[a]);
+			} else { // recommended
+				sortedKeys = sortedKeys.sort((a, b) => sortFunction(a, b));
+			}
+		}
+	}
+
+	// (1/traveltime) * capacity
+	function sortFunction(garageA: string, garageB: string) {
+		const aVal = (1 / dataPackage[garageA]) * capacities[garageA];
+		const bVal = (1 / dataPackage[garageB]) * capacities[garageB];
+		return bVal - aVal;
 	}
 </script>
 
@@ -557,29 +589,32 @@
 			</div>
 		{/if}
 	</div>
-	<!-- {#if show}
-		<div class="map-shadow" style></div>
-	{:else}
-	{/if} -->
-	<div class="map-shadow" style="right:0px"/>
+	<div class="map-shadow" style="right:0px" />
 	{#if show}
 		<div class="results-menu" transition:fly={{ x: 200, duration: 300, easing: quintOut }}>
 			{#if dataLoaded}
 				<div class="results-results">
 					<h2>Results</h2>
 					<h4>Departure time: {timeDisplay}</h4>
-					<!-- <div class="result-divider"></div> -->
+					<div>
+						<label>Sort by</label>
+						<select bind:value={sortType} on:change={sortGarages}>
+							<option>recommended</option>
+							<option>capacity</option>
+							<option>travel time</option>
+						</select>
+					</div>
 					{#key dataPackage}
-						{#each Object.keys(garageNames) as garage, i}
+						{#each sortedKeys as garage, i}
 							{#if i !== 0}
-								<div class="result-divider"/>
+								<div class="result-divider" />
 							{/if}
 							<div class="route-time-wrapper">
 								<h3>{garageNames[garage]}:</h3>
 								<div>
-									<p>{routeTimeDisplays[i]}</p>
-									<div id="progress-circle" style={circleStyles[i]}>
-										<p>{capacities[`garage${i+1}`]} remaining</p>
+									<p>{routeTimeDisplays[garage]}</p>
+									<div id="progress-circle" style={circleStyles[garage]}>
+										<p>{capacities[garage]} remaining</p>
 									</div>
 								</div>
 							</div>
@@ -625,11 +660,11 @@
 
 	.map-shadow {
 		box-shadow: inset rgba(0, 0, 0, 0.5) 0px 10px 30px;
-		position:absolute;
-		left:260px;
-		height:100%;
-		pointer-events:none;
-		background-color:rgba(0,0,0,0);
+		position: absolute;
+		left: 260px;
+		height: 100%;
+		pointer-events: none;
+		background-color: rgba(0, 0, 0, 0);
 	}
 
 	.action-menu {
@@ -644,12 +679,12 @@
 	}
 
 	.results-menu {
-		position:absolute;
+		position: absolute;
 		width: 220px;
-		height:100%;
+		height: 100%;
 		z-index: 2;
-		right:0;
-		background-color:white;
+		right: 0;
+		background-color: white;
 		box-shadow: rgba(0, 0, 0, 0.5) 0px 10px 30px;
 		overflow-y: auto;
 	}
