@@ -204,9 +204,9 @@
 		});
 
 		markers = {
-			garage1: new mapboxgl.Marker({}).setLngLat(garageLocations.garage1),
-			garage2: new mapboxgl.Marker({}).setLngLat(garageLocations.garage2),
-			garage3: new mapboxgl.Marker({}).setLngLat(garageLocations.garage3)
+			garage1: new mapboxgl.Marker({color:'white'}).setLngLat(garageLocations.garage1),
+			garage2: new mapboxgl.Marker({color:'white'}).setLngLat(garageLocations.garage2),
+			garage3: new mapboxgl.Marker({color:'white'}).setLngLat(garageLocations.garage3)
 		};
 
 		markerPopup = {
