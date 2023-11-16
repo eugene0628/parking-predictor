@@ -7,7 +7,7 @@ export const load = async ({ fetch }) => {
         if (response.ok) {
             const data = await response.json();
             const filteredData = data.map(({rec_garage, ...rest}) => rest);
-            return filteredData;
+            return filteredData.reverse();
         } else {
             throw new Error("Failed to obtain sessions table from Svelte.")
         }

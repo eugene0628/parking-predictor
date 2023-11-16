@@ -507,7 +507,8 @@
 			let i = 0;
 			for (const garage in output) {
 				if (i === 3) break;
-				capacities[garage] = Math.floor(output[garage].expected_occupancy);
+				const value = Math.floor(output[garage].expected_occupancy)
+				capacities[garage] = value < 0 ? 0 : value;
 				i++;
 			}
 			for (const garage in markers) {
