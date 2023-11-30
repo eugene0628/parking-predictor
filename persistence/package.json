@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "persistence": "docker-compose up",
+    "i_flask": "pip install -r ml-model/requirements.txt",
     "migrate": "npx liquibase --defaultsFile=liquibase/liquibase.properties update",
     "serve": "node app.js",
     "flask": "flask --app ml-model/predict run",
