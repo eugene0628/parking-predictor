@@ -1,4 +1,4 @@
-const { PrismaClient } = require('./prisma/generated/client'); // Adjust the path as needed
+const { PrismaClient } = require('../prisma/generated/client'); // Adjust the path as needed
 const prisma = new PrismaClient();
 
 async function createUser() {
@@ -20,26 +20,6 @@ async function createUser() {
     } finally {
         await prisma.$disconnect();
     }
-
-    // try {
-    //     const user = await prisma.SESSIONS.create({
-    //         data: {
-    //             USER: 1,
-    //             rec_garage: 'Hello',
-    //             rec_avail_1: 1,
-    //             rec_travel_time_1: 2,
-    //             rec_avail_2: 3,
-    //             rec_travel_time_2: 4,
-    //             rec_avail_3: 5,
-    //             rec_travel_time_3: 6,
-    //         },
-    //     });
-    //     console.log('Created user:', user);
-    // } catch (error) {
-    //     console.error('Error creating user:', error);
-    // } finally {
-    //     await prisma.$disconnect();
-    // }
 }
 
 
