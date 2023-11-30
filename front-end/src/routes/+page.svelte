@@ -184,7 +184,7 @@
 		const pulse = document.createElement('div');
 		pin.className = 'pin';
 		pulse.className = 'pulse';
-		innerWrapper.innerHTML = `${pin.outerHTML}${pulse.outerHTML}`
+		innerWrapper.innerHTML = `${pin.outerHTML}${pulse.outerHTML}`;
 		wrapper.innerHTML = innerWrapper.outerHTML;
 		return wrapper;
 	}
@@ -507,7 +507,7 @@
 			let i = 0;
 			for (const garage in output) {
 				if (i === 3) break;
-				const value = Math.floor(output[garage].expected_occupancy)
+				const value = Math.floor(output[garage].expected_occupancy);
 				capacities[garage] = value < 0 ? 0 : value;
 				i++;
 			}
@@ -913,12 +913,12 @@
 		to {
 			visibility: hidden;
 		}
-	} 
+	}
 
 	:global(.positioner) {
-		position:relative;
-		top:-14px;
-		left:5px;
+		position: relative;
+		top: -14px;
+		left: 5px;
 	}
 
 	:global(.pin) {
